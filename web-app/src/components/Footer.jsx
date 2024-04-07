@@ -1,7 +1,9 @@
 import React from 'react'
 
-export const Footer = () => {
+export default function Footer() {
   return (
-    <div>Footer</div>
+    <div className="flex bg-black text-white items-center h-10 px-8 py-4">
+        Footer
+    </div>
   )
 }
