@@ -5,18 +5,55 @@ import Layout from "./components/Layout";
 import { Camp } from "./pages/Camp";
 import Profile from "./pages/Profile";
 import AddCamp from "./pages/AddCamp";
+import Login from "./pages/Login";
+import { useAuthContext } from "@asgardeo/auth-react";
+import { useEffect, useState } from "react";
+import BloodRequests from "./pages/BloodRequests";
+import Error from "./pages/Error";
+
 
 function App() {
+  const { state, signIn, signOut, getBasicUserInfo } = useAuthContext();
+  const [userDetails, setUserDetails] = useState({});
+  const [userGroup, setUserGroup] = useState([]);
+
+  useEffect(() => {
+    if (state.isAuthenticated) {
+      getBasicUserInfo().then((response) => {
+        setUserDetails(response);
+        if (response && response.groups) {
+          setUserGroup(response.groups || []);
+        }
+        console.log("User details1", response);
+      });
+    }
+  }, [state, getBasicUserInfo]);
+
   return (
     <div className="">
       <BrowserRouter>
         <Routes>
-          <Route element={<Layout/>}>
-            <Route path="/" element={<Home />} />
-            <Route path="/camps" element={<Camp />} />
-            <Route path="/add-camp" element={<AddCamp />} />
-            <Route path="/donor-profile" element={<Profile />} />
-          </Route>
+          {state.isAuthenticated ? (
+            <Route element={<Layout userDetails={userDetails} />}>
+              <Route
+                path="/"
+                element={
+                  <Profile userDetails={userDetails} userGroup={userGroup} />
+                }
+              />
+              <Route path="/camps" element={<Camp />} />
+              <Route path="/request" element={<BloodRequests />} />
+              <Route path="/add-camp" element={<AddCamp />} />
+            </Route>
+          ) : (
+            <Route>
+              <Route element={<Layout userDetails={userDetails} />}>
+                <Route path="/" element={<Home />} />
+              </Route>
+              <Route path="/sign-in" element={<Login />} />
+              <Route path="/*" element={<Error />} />
+            </Route>
+          )}
         </Routes>
       </BrowserRouter>
     </div>
