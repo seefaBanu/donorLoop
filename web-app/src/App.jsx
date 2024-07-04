@@ -13,9 +13,10 @@ import Error from "./pages/Error";
 
 
 function App() {
-  const { state, signIn, signOut, getBasicUserInfo } = useAuthContext();
+  const { state, signIn, signOut, getBasicUserInfo,getAccessToken } = useAuthContext();
   const [userDetails, setUserDetails] = useState({});
   const [userGroup, setUserGroup] = useState([]);
+  const [token, setToken] = useState([]);
 
   useEffect(() => {
     if (state.isAuthenticated) {
@@ -25,6 +26,10 @@ function App() {
           setUserGroup(response.groups || []);
         }
         console.log("User details1", response);
+        getAccessToken().then((response) => {
+          console.log("Access Token", response);
+          setToken(response)
+        });
       });
     }
   }, [state, getBasicUserInfo]);
@@ -42,7 +47,7 @@ function App() {
                 }
               />
               <Route path="/camps" element={<Camp />} />
-              <Route path="/request" element={<BloodRequests />} />
+              <Route path="/request" element={<BloodRequests token = {token} />} />
               <Route path="/add-camp" element={<AddCamp />} />
             </Route>
           ) : (
