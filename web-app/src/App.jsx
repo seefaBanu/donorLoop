@@ -47,7 +47,7 @@ function App() {
                 }
               />
               <Route path="/camps" element={<Camp />} />
-              <Route path="/request" element={<BloodRequests token = {token} />} />
+              <Route path="/request" element={<BloodRequests token = {token} userDetails ={userDetails} />} />
               <Route path="/add-camp" element={<AddCamp />} />
             </Route>
           ) : (

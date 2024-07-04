@@ -2,17 +2,21 @@ import React, { useState, useEffect } from "react";
 import RequestDetailsPopup from "../components/Requests/RequestDetailsPopup";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { IoSearchCircle } from "react-icons/io5";
-import Services from "../services/Services"; // Make sure the path is correct
+import Services from "../services/Services";
+import AddRequestPopup from "../components/Requests/AddRequestPopup";
+import MultiSelectDropDown from "../components/MultiSelectDropDown";
 
-const BloodRequests = ({ token }) => {
-  const [requests, setRequests] = useState([]); // Array of blood requests
-  const [selectedRequest, setSelectedRequest] = useState(null); // Track selected request for details popup
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
-  const [searchTerm, setSearchTerm] = useState(""); // State to hold search term
+const BloodRequests = ({ token, userDetails }) => {
+  const [requests, setRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAddPopup, setShowAddPopup] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const [itemsPerPage, setItemsPerPage] = useState(5); // Number of items per page
 
   useEffect(() => {
-    // Fetch blood requests from the backend
     Services.getBloodRequests(token)
       .then((response) => {
         setRequests(response.data);
@@ -25,19 +29,29 @@ const BloodRequests = ({ token }) => {
       });
   }, [token]);
 
-  // Function to handle click on More Details button
   const handleMoreDetailsClick = (request) => {
     setSelectedRequest(request);
   };
 
-  // Function to close the popup
   const handleClosePopup = () => {
     setSelectedRequest(null);
   };
 
-  // Function to handle search input change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const toggleAddPopup = () => {
+    setShowAddPopup(!showAddPopup);
+  };
+
+  const handleAddRequest = (newRequest) => {
+    console.log("Adding new request:", newRequest);
+    setShowAddPopup(false);
+  };
+
+  const resetSearch = () => {
+    setSearchTerm("");
   };
 
   const filteredRequests = requests.filter(
@@ -47,35 +61,36 @@ const BloodRequests = ({ token }) => {
       request.cluster.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const getStatusClass = (status) => {
+    switch (status.toLowerCase()) {
+      case "urgent":
+        return "bg-orange-100";
+      case "critical":
+        return "bg-red-100";
+      case "routine":
+        return "bg-green-100";
+      default:
+        return "bg-gray-100";
+    }
+  };
+
+  // Calculate paginated requests
+  const indexOfLastRequest = currentPage * itemsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - itemsPerPage;
+  const currentRequests = filteredRequests.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold">Blood Requests</h1>
 
       <div className="flex justify-end items-center mb-4 gap-4">
-        {/* <div className="flex flex-row gap-8 mx-10">
-          <div className="flex flex-col">
-            <p className="text-sm text-gray-500 font-light py-1">Blood Bank</p>
-            <div className="flex flex-row items-center justify-between border rounded-lg px-2 py-1">
-              <p className="text-gray-500 text-sm font-light">any</p>
-              <IoMdArrowDropdown className="text-gray-500" />
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <p className="text-sm text-gray-500 font-light py-1">Cluster</p>
-            <div className="flex flex-row items-center justify-between border rounded-lg px-2 py-1">
-              <p className="text-gray-500 text-sm font-light">any</p>
-              <IoMdArrowDropdown className="text-gray-500" />
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <p className="text-sm text-gray-500 font-light py-1">Status</p>
-            <div className="flex flex-row items-center justify-between border rounded-lg px-2 py-1">
-              <p className="text-gray-500 text-sm font-light">any</p>
-              <IoMdArrowDropdown className="text-gray-500" />
-            </div>
-          </div>
-        </div> */}
-        <div className="flex border my-auto border-gray-300 font-light px-4 text-sm text-gray-400 bg-white p-2 gap-4 rounded-3xl items-center align-middle ">
+        <div className="flex border my-auto border-gray-300 bg-white font-light px-4 text-sm text-gray-400 p-2 gap-4 rounded-3xl items-center align-middle ">
           <input
             type="text"
             placeholder="Search Donations"
@@ -85,7 +100,10 @@ const BloodRequests = ({ token }) => {
           />
           <IoSearchCircle className="w-4 h-4" />
         </div>
-        <button className="flex border bg-black align-middle my-auto text-white text-sm p-2 rounded-3xl hover:bg-white hover:text-black hover:border transition duration-500">
+        <button
+          className="flex border bg-black align-middle my-auto text-white text-sm p-2 rounded-3xl hover:bg-white hover:text-black hover:border transition duration-500"
+          onClick={toggleAddPopup}
+        >
           + Add Request
         </button>
       </div>
@@ -119,7 +137,7 @@ const BloodRequests = ({ token }) => {
             </div>
           </div>
           <div className="">
-            {filteredRequests.map((request) => (
+            {currentRequests.map((request) => (
               <div
                 key={request.id}
                 className="flex justify-between items-center my-2 bg-white rounded-xl p-2"
@@ -139,9 +157,16 @@ const BloodRequests = ({ token }) => {
                 <div className="flex-1 text-sm px-4 py-2 text-center">
                   {request.reqDate}
                 </div>
-                <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {request.status}
+                <div className="flex-1 text-sm px-4 py-2 text-center rounded-3xl justify-center">
+                  <p
+                    className={`flex w-fit text-sm px-4 py-2 text-center rounded-3xl mx-auto ${getStatusClass(
+                      request.status
+                    )}`}
+                  >
+                    {request.status}
+                  </p>
                 </div>
+
                 <div className="flex-1 text-sm px-4 py-2 text-center">
                   <button
                     className="text-blue-500 hover:underline"
@@ -156,11 +181,52 @@ const BloodRequests = ({ token }) => {
         </div>
       </div>
 
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        <button
+          className="px-4 py-2 mx-1 bg-gray-300 rounded disabled:opacity-50"
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            className={`px-4 py-2 mx-1 ${
+              currentPage === index + 1
+                ? "bg-black text-white"
+                : "bg-gray-300"
+            } rounded`}
+            onClick={() => setCurrentPage(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          className="px-4 py-2 mx-1 bg-gray-300 rounded disabled:opacity-50"
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+
       {/* Details Popup */}
       {selectedRequest && (
         <RequestDetailsPopup
           request={selectedRequest}
           onClose={handleClosePopup}
+        />
+      )}
+
+      {/* Add Request Popup */}
+      {showAddPopup && (
+        <AddRequestPopup
+          onClose={toggleAddPopup}
+          onAddRequest={handleAddRequest}
+          token={token}
+          userDetails={userDetails}
         />
       )}
     </div>
