@@ -1,89 +1,90 @@
-
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./components/Layout";
 import { Camp } from "./pages/Camp";
 import Profile from "./pages/Profile";
 import AddCamp from "./pages/AddCamp";
-import UpdateCamp from "./pages/UpdateCamp";
+import Login from "./pages/Login";
+import { useAuthContext } from "@asgardeo/auth-react";
+import { useEffect, useState } from "react";
+import BloodRequests from "./pages/BloodRequests";
+import Error from "./pages/Error";
+import FindBlood from "./pages/FindBlood";
 import CampMoreDetails from "./pages/CampMoreDetails";
-import React, { useState } from "react";
+import UpdateCamp from "./pages/UpdateCamp";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function App() {
-    const [camps, setCamps] = useState([
-      {
-        id: 1,
-        title: "Blood Donation Camp: Save Lives Together",
-        date: "2024-04-05",
-        s_time: "08:30 AM",
-        e_time: "02:00 PM",
-        location: "Galle Community Center, 456 Park Avenue, Galle, Sri Lanka",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXmVnq4p-f8zQt6-fN7gKfSdWyn3oOKVqb33J_FUHUew&s",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        phone1: "075 123 1234",
-        phone2: "076 123 1234",
-        reglink: "www.abcd.com",
-      },
+  const { state, signIn, signOut, getBasicUserInfo, getAccessToken } =
+    useAuthContext();
+  const [userDetails, setUserDetails] = useState({});
+  const [userGroup, setUserGroup] = useState([]);
+  const [token, setToken] = useState([]);
 
-      {
-        id: 2,
-        title: "Blood Donation Camp: Save Lives Together",
-        date: "2024-04-05",
-        s_time: "08:30 AM",
-        e_time: "02:00 PM",
-        location: "Galle Community Center, 456 Park Avenue, Galle, Sri Lanka",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXmVnq4p-f8zQt6-fN7gKfSdWyn3oOKVqb33J_FUHUew&s",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        phone1: "075 123 1234",
-        phone2: "076 123 1234",
-        reglink: "www.abcd.com",
-      },
-      // Add more camps as needed
-    ]);
-    const addNewCamp = (newCamp) => {
-      setCamps([...camps, { ...newCamp, id: camps.length + 1 }]);
-  };
-  
-  const updateCamp = (updatedCamp) => {
-    setCamps(
-      camps.map((camp) => (camp.id === updatedCamp.id ? updatedCamp : camp))
-    );
-  };
+  useEffect(() => {
+    if (state.isAuthenticated) {
+      getBasicUserInfo().then((response) => {
+        setUserDetails(response);
+        if (response && response.groups) {
+          setUserGroup(response.groups || []);
+        }
+        console.log("User details1", response);
+        getAccessToken().then((response) => {
+          console.log("Access Token", response);
+          setToken(response);
+          sessionStorage.setItem("accessToken", token);
+        });
+      });
+    }
+  }, [state, getBasicUserInfo]);
 
   return (
     <div className="">
       <BrowserRouter>
         <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
+          {state.isAuthenticated ? (
+            <Route element={<Layout userDetails={userDetails} />}>
+              <Route
+                path="/"
+                element={
+                  <Profile userDetails={userDetails} userGroup={userGroup} />
+                }
+              />
 
-            {/* <Route path="/add-camp" element={<AddCamp />} /> */}
-            <Route path="/donor-profile" element={<Profile />} />
-            {/* <Route path="/camp-more-details" element={<CampMoreDetails />} /> */}
-            <Route path="/" element={<Camp camps={camps} />} />
-            <Route
-              path="/add-camp"
-              element={<AddCamp addNewCamp={addNewCamp} />}
-            />
-            <Route path="/camps" element={<Camp camps={camps} />} />
-            <Route
-              path="/update-camp/:id"
-              element={<UpdateCamp camps={camps} updateCamp={updateCamp} />}
-            />
+              <Route
+                path="/request"
+                element={
+                  <BloodRequests
+                    token={token}
+                    userDetails={userDetails}
+                    groups={userGroup}
+                  />
+                }
+              />
+              <Route path="/add-camp" element={<AddCamp />} />
+              <Route path="/camps" element={<Camp />} />
+              <Route path="/update-camp/:id" element={<UpdateCamp />} />
 
-            <Route
-              path="/camp-more-details/:id"
-              element={<CampMoreDetails camps={camps} />}
-            />
-          </Route>
+              <Route
+                path="/camp-more-details/:id"
+                element={<CampMoreDetails />}
+              />
+              <Route path="/find-blood" element={<FindBlood />} />
+            </Route>
+          ) : (
+            <Route>
+              <Route element={<Layout userDetails={userDetails} />}>
+                <Route path="/" element={<Home />} />
+              </Route>
+              <Route path="/sign-in" element={<Login />} />
+              <Route path="/*" element={<Error />} />
+            </Route>
+          )}
         </Routes>
       </BrowserRouter>
     </div>
   );
 }
-
 export default App;
