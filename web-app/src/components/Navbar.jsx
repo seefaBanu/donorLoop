@@ -39,9 +39,9 @@ export default function Navbar() {
     <div className="fixed top-0 left-0 right-0 z-50 grid grid-cols-3 bg-gradient-to-r from-red-900 to-red-600 h-20 text-black py-4 px-8 shadow-md">
       <div className="flex justify-start items-center">
         <div className="bg-white rounded-3xl">
-          <img src={Logo} alt="Logo" className="h-10 w-10" />
+          <img src={Logo} alt="Logo" className="h-10 w-10 " />
         </div>
-        <h1 className="font-bold text-white px-2">DONOR LOOP</h1>
+        <h1 className="font-bold text-white px-2 sm:not show">DONOR LOOP</h1>
       </div>
 
       {state.isAuthenticated ? (
