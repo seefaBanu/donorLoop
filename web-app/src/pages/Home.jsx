@@ -8,23 +8,23 @@ import SixthElement from "../components/Home/SixthElement";
 
 const Home = () => {
   return (
-    <>
-      <div>
+    <div className="relative flex-col mt-20 overflow-hidden w-full">
+      <div className="  w-full">
         <SecondElement />
       </div>
-      <div>
+      <div className="  w-full">
         <ThirdElement />
       </div>
-      <div>
+      <div className=" w-full">
         <FourthElement />
       </div>
-      <div>
+      <div className="  w-full ">
         <FifthElement />
       </div>
-      <div>
+      <div className=" w-full text-center">
         <SixthElement />
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,40 +1,63 @@
 import React from "react";
+import { IoClose } from "react-icons/io5";
+import { CiHospital1 } from "react-icons/ci";
+import { GiArrowCluster } from "react-icons/gi";
+import { GrStatusCriticalSmall } from "react-icons/gr";
+import { MdBloodtype } from "react-icons/md";
+import { IoLocationSharp, IoMailSharp, IoDocumentTextSharp } from "react-icons/io5";
 
 const RequestDetailsPopup = ({ request, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="bg-white rounded-lg p-6 z-10">
-        <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-          onClick={onClose}
-        >
-          Close
-        </button>
-        <h2 className="text-sm font-light mb-4">Request Details</h2>
-        <p>
-          <span className="font-light">Blood Bank:</span> {request.bloodBank}
-        </p>
-        <p>
-          <span className="font-bold">Cluster:</span> {request.cluster}
-        </p>
-        <p>
-          <span className="font-bold">Mobile Number:</span>{" "}
-          {request.mobileNumber}
-        </p>
-        <p>
-          <span className="font-bold">Blood Needed:</span> {request.bloodNeeded}
-        </p>
-        <p>
-          <span className="font-bold">Requested Date:</span>{" "}
-          {request.requestedDate}
-        </p>
-        <p>
-          <span className="font-bold">Status:</span> {request.status}
-        </p>
-        <p>
-          <span className="font-bold">More Details:</span> {request.details}
-        </p>
+      <div className="absolute inset-0 bg-black opacity-50" onClick={onClose}></div>
+      <div className="bg-white rounded-3xl z-10 w-1/3 relative w-[50%]">
+        <div className="bg-black p-6 rounded-t-3xl flex justify-center items-center relative">
+          <h2 className=" text-base font-light text-white">Request Details</h2>
+          <button
+            className="absolute top-4 text-sm right-4 text-black hover:text-gray-700 hover:bg-gray-200 rounded-full bg-white"
+            onClick={onClose}
+          >
+            <IoClose size={24} />
+          </button>
+        </div>
+        <div className="p-6 grid grid-cols-2 gap-4 text-sm">
+          <div className="mb-2 flex items-center">
+            <CiHospital1 className="text-gray-400 mr-2" />
+            <span className="font-light">Blood Bank:</span> {request.bloodBank}
+          </div>
+          <div className="mb-2 flex items-center">
+            <GiArrowCluster className="text-gray-400 mr-2" />
+            <span className="font-light">Cluster:</span> {request.cluster}
+          </div>
+          <div className="mb-2 flex items-center">
+            <GiArrowCluster className="text-gray-400 mr-2" />
+            <span className="font-light">Mobile Number:</span> {request.mobileNumber}
+          </div>
+          <div className="mb-2 flex items-center">
+            <MdBloodtype className="text-gray-400 mr-2" />
+            <span className="font-light">Blood Needed:</span> {request.bloodNeeded}
+          </div>
+          <div className="mb-2 flex items-center">
+            <IoDocumentTextSharp className="text-gray-400 mr-2" />
+            <span className="font-light">Requested Date:</span> {request.requestedDate}
+          </div>
+          <div className="mb-2 flex items-center">
+            <GrStatusCriticalSmall className="text-gray-400 mr-2" />
+            <span className="font-light">Status:</span> {request.status}
+          </div>
+          <div className="mb-2 flex items-center">
+            <IoLocationSharp className="text-gray-400 mr-2" />
+            <span className="font-light">Location:</span> {request.location}
+          </div>
+          <div className="mb-2 flex items-center">
+            <IoMailSharp className="text-gray-400 mr-2" />
+            <span className="font-light">Email:</span> {request.email}
+          </div>
+          <div className="mb-2 flex items-center">
+            <IoDocumentTextSharp className="text-gray-400 mr-2" />
+            <span className="font-light">Additional Notes:</span> {request.additionalNotes}
+          </div>
+        </div>
       </div>
     </div>
   );

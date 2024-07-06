@@ -12,10 +12,10 @@ export default function Layout({ userDetails}) {
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
       <Navbar userDetails = {userDetails} />
-      <div className="flex flex-col flex-1 px-4 py-8 mt-20">
+      <div className="flex flex-col flex-1">
         <Outlet />
       </div>
-      <Footer className=" bottom-0 " />
+      <Footer className="bottom-0 " />
     </div>
   );
 }

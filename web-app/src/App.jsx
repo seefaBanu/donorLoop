@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import BloodRequests from "./pages/BloodRequests";
 import Error from "./pages/Error";
 import FindBlood from "./pages/FindBlood";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 
 function App() {

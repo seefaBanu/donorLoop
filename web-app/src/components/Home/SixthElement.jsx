@@ -17,8 +17,8 @@ const SixthElement = () => {
   };
 
   return (
-    <div className="relative flex items-center justify-center h-screen bg-gray-100">
-      <Slider {...settings} className="w-full max-w-4xl">
+    <div className=" flex items-center justify-center h-screen sm:h-96 sm:p-6  b">
+      <Slider {...settings} className="w-full max-w-4xl ">
         <div className="text-center">
           <img src={donorIcon} alt="Donor Icon" className="h-24 w-24 mx-auto" />
           <h2 className="text-4xl font-bold text-red-600">100</h2>

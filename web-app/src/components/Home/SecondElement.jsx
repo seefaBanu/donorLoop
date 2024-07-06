@@ -3,12 +3,12 @@ import img1 from "../../assets/img1.png";
 
 const SecondElement = () => {
   return (
-    <div className="flex flex-row items-center justify-center p-6">
-      <div className="w-1/2 flex justify-center items-center mb-4 md:mb-0">
+    <div className="flex flex-row items-center justify-center p-6 sm:flex-col sm:p-6">
+      <div className="w-1/2 flex justify-center items-center mb-4 md:mb-0 sm:w-[100%] ">
         <img src={img1} alt="Blood donation" className="w-[500%]" />
-      </div>
-      <div className="w-1/2 pl-6">
-        <h1 className="text-3xl font-bold text-red-700 mb-4">
+      </div> 
+      <div className="w-1/2 pl-6 sm:pl-0 sm:w-full  sm:text-center">
+        <h1 className="text-3xl font-bold text-red-700 mb-4 sm:text-center">
           SAVE LIFE DONATE BLOOD!
         </h1>
         <p className="text-justify text-gray-700 mb-4">
@@ -21,7 +21,7 @@ const SecondElement = () => {
           lasting impact on lives. Together, let's ensure no one waits for the
           blood they need.
         </p>
-        <button className="bg-black text-white py-2 px-4 rounded-3xl hover:bg-black">
+        <button className="bg-black text-white py-2 px-4 rounded-3xl hover:bg-black ">
           Get Started
         </button>
       </div>
