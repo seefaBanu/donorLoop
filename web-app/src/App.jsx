@@ -1,44 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./components/Layout";
-import { Camp } from "./pages/Camp";
+import Camp from "./pages/Camp";
 import Profile from "./pages/Profile";
 import AddCamp from "./pages/AddCamp";
 import Login from "./pages/Login";
 import { useAuthContext } from "@asgardeo/auth-react";
-import { useEffect, useState } from "react";
 import BloodRequests from "./pages/BloodRequests";
 import Error from "./pages/Error";
 import FindBlood from "./pages/FindBlood";
 import CampMoreDetails from "./pages/CampMoreDetails";
+import axios from "axios"; // Import axios for API calls
 import UpdateCamp from "./pages/UpdateCamp";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 function App() {
-  const { state, signIn, signOut, getBasicUserInfo, getAccessToken } =
-    useAuthContext();
+  const { state, getBasicUserInfo, getAccessToken } = useAuthContext();
   const [userDetails, setUserDetails] = useState({});
   const [userGroup, setUserGroup] = useState([]);
-  const [token, setToken] = useState([]);
+  const [token, setToken] = useState("");
+  const [camps, setCamps] = useState([]);
 
   useEffect(() => {
     if (state.isAuthenticated) {
+      // Fetch user details
       getBasicUserInfo().then((response) => {
         setUserDetails(response);
-        if (response && response.groups) {
-          setUserGroup(response.groups || []);
-        }
-        console.log("User details1", response);
-        getAccessToken().then((response) => {
-          console.log("Access Token", response);
-          setToken(response);
+        setUserGroup(response.groups || []);
+
+        // Fetch access token
+        getAccessToken().then((token) => {
+          setToken(token);
           sessionStorage.setItem("accessToken", token);
+
+          // Fetch camps data using the token
+          axios
+            .get("http://localhost:8080/camps", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              setCamps(response.data);
+            })
+            .catch((error) => {
+              console.error("Error fetching camps:", error);
+            });
         });
       });
     }
-  }, [state, getBasicUserInfo]);
+  }, [state, getBasicUserInfo, getAccessToken]);
 
   return (
     <div className="">
@@ -52,7 +63,6 @@ function App() {
                   <Profile userDetails={userDetails} userGroup={userGroup} />
                 }
               />
-
               <Route
                 path="/request"
                 element={
@@ -63,14 +73,13 @@ function App() {
                   />
                 }
               />
-              <Route path="/add-camp" element={<AddCamp />} />
-              <Route path="/camps" element={<Camp />} />
-              <Route path="/update-camp/:id" element={<UpdateCamp />} />
-
+              <Route path="/add-camp" element={<AddCamp token={token} />} />
+              <Route path="/camps" element={<Camp camps={camps} />} />
               <Route
                 path="/camp-more-details/:id"
-                element={<CampMoreDetails />}
+                element={<CampMoreDetails camps={camps} token={token} />}
               />
+              <Route path="/update-camp/:id" element = {<UpdateCamp camps={camps} token = {token}/>}/>
               <Route path="/find-blood" element={<FindBlood />} />
             </Route>
           ) : (
@@ -87,4 +96,5 @@ function App() {
     </div>
   );
 }
+
 export default App;

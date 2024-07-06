@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
 
-const AddCamp = ({ addNewCamp }) => {
+const AddCamp = ({ token }) => {
   const [campData, setCampData] = useState({
     title: "",
     description: "",
     date: "",
-    s_time: "",
-    e_time: "",
+    stime: "",
+    etime: "",
     location: "",
     phone1: "",
     phone2: "",
@@ -22,11 +22,10 @@ const AddCamp = ({ addNewCamp }) => {
   const [imagePreview, setImagePreview] = useState(null);
 
   const validatePhoneNumber = (phoneNumber) => {
-    // Regex for Sri Lankan phone numbers (allows +94 or 0 at the start)
     const phoneRegex = /^(?:\+94\d{9}|0\d{9})$/;
-
     return phoneRegex.test(phoneNumber);
   };
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
@@ -40,6 +39,7 @@ const AddCamp = ({ addNewCamp }) => {
       setImagePreview(null);
     }
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCampData({ ...campData, [name]: value });
@@ -59,38 +59,41 @@ const AddCamp = ({ addNewCamp }) => {
       alert("Please correct the errors before submitting.");
       return;
     }
+
     try {
-      let imageUrl = "";
+      const formData = new FormData();
+      formData.append("camp", JSON.stringify(campData)); // Append campData directly
+
       if (selectedFile) {
-        const formData = new FormData();
         formData.append("file", selectedFile);
-        const response = await axios.post("/api/upload", formData);
-        imageUrl = response.data.imageUrl;
       }
 
-      const newCampData = {
-        ...campData,
-        image: imageUrl,
-      };
+      console.log("Form data:", formData);
 
-      await addNewCamp(newCampData);
-      navigate("/");
+      await axios.post("http://localhost:8080/camps", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure correct content type for FormData
+          Authorization: `Bearer ${token}`, // Include Authorization header with token
+        },
+      });
+
+      navigate("/camps"); 
+      window.location.reload();
     } catch (error) {
       console.error("Error adding new camp:", error);
       alert("There was an error adding the new camp. Please try again.");
     }
   };
 
+
   return (
-    <div className="container mt-10">
-      <div className="ml-60 mr-60 mb-16">
-        <h2 className="text-2xl font-semibold mb-5 ml-2">Create Camp</h2>
-        <div className="p-2 m-3 rounded-lg bg-white relative drop-shadow-2xl">
+    <div className="flex mt-20">
+      <div className="p-8 w-full">
+        <h2 className="text-lg font-semibold text-gray-700 p-2">Create Camp</h2>
+        <div className="p-2 m-3 rounded-lg bg-white relative">
           <form onSubmit={handleSubmit} className="space-y-4 m-6">
             <div className="w-full flex items-center text-sm">
-              <label htmlFor="title" className="w-1/5 font-semibold">
-                Camp Title
-              </label>
+              <label htmlFor="title" className="w-1/5 font-normal">Camp Title</label>
               <input
                 id="title"
                 name="title"
@@ -102,9 +105,7 @@ const AddCamp = ({ addNewCamp }) => {
             </div>
 
             <div className="w-full flex items-center text-sm">
-              <label htmlFor="description" className="w-1/5 mb-1 font-semibold">
-                Description
-              </label>
+              <label htmlFor="description" className="w-1/5 mb-1 font-normal">Description</label>
               <textarea
                 id="description"
                 name="description"
@@ -116,10 +117,8 @@ const AddCamp = ({ addNewCamp }) => {
             </div>
 
             <div className="flex w-full text-sm">
-              <div className="w-full flex items-center ">
-                <label htmlFor="date" className="w-2/5 mb-1 font-semibold">
-                  Date
-                </label>
+              <div className="w-full flex items-center">
+                <label htmlFor="date" className="w-2/5 mb-1 font-normal">Date</label>
                 <input
                   id="date"
                   name="date"
@@ -131,17 +130,12 @@ const AddCamp = ({ addNewCamp }) => {
                 />
               </div>
               <div className="w-full flex items-center">
-                <label
-                  htmlFor="time"
-                  className="w-1/3 mb-1 text-end mr-8 font-semibold"
-                >
-                  Time
-                </label>
+                <label htmlFor="time" className="w-1/3 mb-1 text-end mr-8 font-norml">Time</label>
                 <input
                   id="s_time"
                   name="s_time"
                   type="time"
-                  value={campData.s_time}
+                  value={campData.stime}
                   onChange={handleChange}
                   className="w-2/3 border rounded px-3 py-2 mr-2"
                   required
@@ -151,7 +145,7 @@ const AddCamp = ({ addNewCamp }) => {
                   id="e_time"
                   name="e_time"
                   type="time"
-                  value={campData.e_time}
+                  value={campData.etime}
                   onChange={handleChange}
                   className="w-2/3 border rounded px-3 py-2 ml-2"
                   required
@@ -160,9 +154,7 @@ const AddCamp = ({ addNewCamp }) => {
             </div>
 
             <div className="w-full flex items-center text-sm">
-              <label htmlFor="location" className="w-1/5 mb-1 font-semibold">
-                Location
-              </label>
+              <label htmlFor="location" className="w-1/5 mb-1 font-normal">Location</label>
               <input
                 id="location"
                 name="location"
@@ -174,9 +166,7 @@ const AddCamp = ({ addNewCamp }) => {
             </div>
 
             <div className="w-full flex items-center text-sm">
-              <label htmlFor="phone" className="w-1/5 mb-1 font-semibold">
-                Contact No
-              </label>
+              <label htmlFor="phone" className="w-1/5 mb-1 font-normal">Contact No</label>
               <div className="w-1/5 flex flex-col">
                 <input
                   placeholder="+94 7* **** ***"
@@ -184,14 +174,10 @@ const AddCamp = ({ addNewCamp }) => {
                   name="phone1"
                   value={campData.phone1}
                   onChange={handleChange}
-                  className={`border rounded px-3 py-2 ${
-                    errors.phone1 ? "border-red-500" : ""
-                  }`}
+                  className={`border rounded px-3 py-2 ${errors.phone1 ? "border-red-500" : ""}`}
                   required
                 />
-                {errors.phone1 && (
-                  <p className="text-red-500 text-xs mt-1">{errors.phone1}</p>
-                )}
+                {errors.phone1 && <p className="text-red-500 text-xs mt-1">{errors.phone1}</p>}
               </div>
               <div className="w-1/5 flex flex-col ml-2">
                 <input
@@ -200,24 +186,15 @@ const AddCamp = ({ addNewCamp }) => {
                   name="phone2"
                   value={campData.phone2}
                   onChange={handleChange}
-                  className={`border rounded px-3 py-2 ${
-                    errors.phone2 ? "border-red-500" : ""
-                  }`}
+                  className={`border rounded px-3 py-2 ${errors.phone2 ? "border-red-500" : ""}`}
                   required
                 />
-                {errors.phone2 && (
-                  <p className="text-red-500 text-xs mt-1">{errors.phone2}</p>
-                )}
+                {errors.phone2 && <p className="text-red-500 text-xs mt-1">{errors.phone2}</p>}
               </div>
             </div>
 
             <div className="w-full flex items-center text-sm">
-              <label
-                htmlFor="reglink"
-                className="block mb-1 w-1/5 font-semibold"
-              >
-                Registration Link
-              </label>
+              <label htmlFor="reglink" className="block mb-1 w-1/5 font-normal">Registration Link</label>
               <input
                 id="reglink"
                 name="reglink"
@@ -253,10 +230,7 @@ const AddCamp = ({ addNewCamp }) => {
                     <div style={{ color: "#DE5246" }}>
                       <ImageIcon fontSize="large" />
                     </div>
-
-                    <p className="mt-2 text-sm text-gray-500">
-                      drag & drop file or browse
-                    </p>
+                    <p className="mt-2 text-sm text-gray-500">drag & drop file or browse</p>
                   </>
                 )}
               </div>
@@ -269,10 +243,7 @@ const AddCamp = ({ addNewCamp }) => {
               >
                 Cancel
               </button>
-              <button
-                type="submit"
-                className="bg-black text-white px-6 py-2 rounded"
-              >
+              <button type="submit" className="bg-black text-white px-6 py-2 rounded">
                 Save
               </button>
             </div>

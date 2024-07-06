@@ -1,11 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardBody,
-  Typography,
-  Button,
-} from "@material-tailwind/react";
+import { Card, CardBody, Button } from "@material-tailwind/react";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SearchIcon from "@mui/icons-material/Search";
@@ -13,7 +8,6 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Camp.css";
-import "../App.css";
 
 export const Camp = ({ camps }) => {
   const navigate = useNavigate();
@@ -23,12 +17,12 @@ export const Camp = ({ camps }) => {
   };
 
   return (
-    <div>
+    <div className="mb-10">
       <Carousel
         showArrows={false}
         showStatus={false}
         showThumbs={false}
-        className="flex text-white items-center h-auto"
+        className="flex text-white items-center h-auto mt-20"
       >
         <div
           className="relative h-60"
@@ -39,10 +33,10 @@ export const Camp = ({ camps }) => {
         >
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="relative pt-24">
-            <Typography className="text-3xl">
+            <p className="text-3xl font-semibold">
               <b>Blood Donation Camp: Save Lives Together</b>
-            </Typography>
-            <Typography>Blood Donation Camp: Save Lives Together</Typography>
+            </p>
+            <p>Blood Donation Camp: Save Lives Together</p>
           </div>
         </div>
         <div
@@ -54,10 +48,10 @@ export const Camp = ({ camps }) => {
         >
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="relative pt-24">
-            <Typography className="text-3xl">
+            <p className="text-3xl font-semibold">
               <b>Blood Donation Camp: Save Lives Together</b>
-            </Typography>
-            <Typography>Blood Donation Camp: Save Lives Together</Typography>
+            </p>
+            <p>Blood Donation Camp: Save Lives Together</p>
           </div>
         </div>
         <div
@@ -69,101 +63,92 @@ export const Camp = ({ camps }) => {
         >
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="relative pt-24">
-            <Typography className="text-3xl">
+            <p className="text-3xl font-semibold">
               <b>Blood Donation Camp: Save Lives Together</b>
-            </Typography>
-            <Typography>Blood Donation Camp: Save Lives Together</Typography>
+            </p>
+            <p>Blood Donation Camp: Save Lives Together</p>
           </div>
         </div>
 
         {/* Add more carousel items as needed */}
       </Carousel>
 
-      <div className="mt-6 mx-36 flex">
-        <div className="flex-1 mt-5 text-gray-500 ">
+      <div className="flex flex-row justify-between  w-2/3 mx-auto mt-10">
+        <div className="flex text-gray-500 font-light my-auto">
           <b>Upcoming Camps</b>
         </div>
 
-        <div className="flex-2 m-auto relative text-gray-500 items-center">
-          <div className="relative pr-4">
+        <div className="flex text-gray-500 items-center gap-10 align-middle my-auto">
+          <div className="flex flex-row bg-white p-2 rounded-3xl  border border-gray-300  ">
             <input
-              className="mt-2 mb-auto border-2 border-gray-300 bg-white h-10 pl-4 pr-6 rounded-3xl text-sm focus:outline-none"
+              className="flex text-sm focus:outline-none"
               type="search"
               name="search"
               placeholder="Search Camps"
             />
-            <SearchIcon className="absolute right-5 top-4 text-gray-500" />
+            <SearchIcon className="flex text-sm text-gray-500" />
+          </div>
+
+          <div className="flex ">
+            <button
+              className="flex border bg-black align-middle my-auto text-white text-sm p-2 rounded-3xl hover:bg-gray-600 hover:text-black hover:border transition duration-500"
+              onClick={() => navigate("/add-camp")}
+            >
+              <p className="text-sm mr-2"> + Add Camps</p>
+            </button>
           </div>
         </div>
-
-        <div className="flex-2 mt-2 ">
-          <Button
-            className="bg-black px-2 text-white rounded-3xl h-10"
-            ripple={true}
-            onClick={() => navigate("/add-camp")}
-          >
-            <p className="text-sm mr-2">
-              {" "}
-              <AddOutlinedIcon /> Add Camps
-            </p>
-          </Button>
-        </div>
       </div>
 
-      <div className="relative mt-2 mb-2">
-        <button className="bg-none px-2 py-1 text-gray-500 rounded-3xl absolute right-32">
-          <small>
-            See all <ArrowRightIcon />
-          </small>
+      <div className="flex w-2/3 justify-end mx-auto mt-6">
+        <button className="flex bg-none  text-gray-500 rounded-3xl text-xs my-auto">
+          See all
         </button>
+        <ArrowRightIcon className="flex bg-none  text-gray-500 rounded-3xl text-xs my-auto" />
       </div>
 
-      <div className="mt-10 mx-32">
+      <div className="w-2/3 mx-auto">
         {camps && camps.length > 0 ? (
           camps.map((camp) => (
-            <Card
-              key={camp.id}
-              className="p-2 m-3 flex rounded-lg bg-white relative"
-            >
+            <Card key={camp.campId} className="p-2 flex my-4 rounded-lg bg-white ">
               <div className="flex w-full">
-                <div className="m-1 w-1/4">
+                <div className=" w-1/4 align-middle items-center mx-auto my-auto">
                   <img
-                    src={camp.image}
+                    src={`/${camp.imageUrl}`}
                     alt={camp.title}
-                    className="h-max rounded-lg"
+                    className="rounded-lg h-40 w-full object-cover mx-2  "
                   />
                 </div>
-                <div className="p-4 w-3/4">
+                <div className=" w-3/4 text-sm">
                   <CardBody>
-                    <Typography color="gray">
+                    <p color="gray">
                       <b>{camp.title}</b>
-                    </Typography>
+                    </p>
                     <br />
-                    <Typography color="gray">{camp.date}</Typography>
-                    <Typography color="gray">
+                    <p color="gray">{camp.date}</p>
+                    <p color="gray">
                       {camp.s_time} to {camp.e_time}{" "}
-                    </Typography>
-                    <Typography className="text-gray-500">
+                    </p>
+                    <p className="text-gray-500">
                       <small>
                         <PlaceOutlinedIcon /> {camp.location}
                       </small>
-                    </Typography>
+                    </p>
                   </CardBody>
                 </div>{" "}
                 <div className="absolute bottom-10 right-4">
-                  <Button
-                    onClick={() => handleMoreDetailsClick(camp.id)}
-                    className="bg-gray-200 p-2 text-black"
-                    ripple={true}
+                  <button
+                    onClick={() => handleMoreDetailsClick(camp.campId)}
+                    className="bg-gray-200 p-2 text-black text-xs font-light rounded-lg"
                   >
                     <p>More Details</p>
-                  </Button>
+                  </button>
                 </div>
               </div>
             </Card>
           ))
         ) : (
-          <p>No camps available at the moment.</p>
+          <p className="align-middle text-center mt-10 text-gray-400">No camps available at the moment.</p>
         )}
       </div>
     </div>

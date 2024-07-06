@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
 
-const UpdateCamp = ({ camps, updateCamp }) => {
-    const { id } = useParams();
+const UpdateCamp = ({ camps, token }) => {
+  const { id } = useParams();
   const [campData, setCampData] = useState({
     title: "",
     description: "",
     date: "",
-    s_time: "",
-    e_time: "",
+    stime: "",
+    etime: "",
     location: "",
     phone1: "",
     phone2: "",
@@ -23,11 +23,11 @@ const UpdateCamp = ({ camps, updateCamp }) => {
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    const campToUpdate = camps.find((camp) => camp.id === parseInt(id));
+    const campToUpdate = camps.find((camp) => camp.campId === parseInt(id));
     if (campToUpdate) {
       setCampData(campToUpdate);
-      if (campToUpdate.image) {
-        setImagePreview(campToUpdate.image);
+      if (campToUpdate.imageUrl) {
+        setImagePreview("/"+campToUpdate.imageUrl);
       }
     } else {
       navigate("/camps");
@@ -74,28 +74,24 @@ const UpdateCamp = ({ camps, updateCamp }) => {
     }
 
     try {
-      let imageUrl = campData.image;
-      if (selectedFile) {
         const formData = new FormData();
-        formData.append("file", selectedFile);
-        try {
-          const response = await axios.post("/api/upload", formData);
-          imageUrl = response.data.imageUrl;
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          alert(
-            "Failed to upload image. The camp will be updated without a new image."
-          );
+        formData.append("camp", JSON.stringify(campData)); // Append campData directly
+  
+        if (selectedFile) {
+          formData.append("file", selectedFile);
         }
-      }
-
-      const updatedCampData = {
-        ...campData,
-        image: imageUrl,
-      };
-
-      await updateCamp(updatedCampData);
-      navigate(`/camp-more-details/${id}`);
+  
+        console.log("Form data:", formData);
+  
+        await axios.put(`http://localhost:8080/camps/${id}`, formData, {
+            headers: {
+            "Content-Type": "multipart/form-data", // Ensure correct content type for FormData
+            Authorization: `Bearer ${token}`, // Include Authorization header with token
+          },
+        });
+  
+        window.location.reload();
+        navigate(`/camp-more-details/${id}`);
     } catch (error) {
       console.error("Error updating camp:", error);
       alert("There was an error updating the camp. Please try again.");
@@ -103,13 +99,13 @@ const UpdateCamp = ({ camps, updateCamp }) => {
   };
 
   return (
-    <div className="container mt-10">
-      <div className="ml-60 mr-60 mb-16">
-        <h2 className="text-2xl font-semibold mb-5 ml-2">Update Camp</h2>
-        <div className="p-2 m-3 rounded-lg bg-white relative drop-shadow-2xl">
+    <div className="flex mt-20">
+      <div className="p-8 w-full">
+        <h2 className="text-lg font-semibold text-gray-700 p-2">Update Camp</h2>
+        <div className="p-2 m-3 rounded-lg bg-white relative">
           <form onSubmit={handleSubmit} className="space-y-4 m-6">
             <div className="w-full flex items-center text-sm ">
-              <label htmlFor="title" className="w-1/5 font-semibold">
+              <label htmlFor="title" className="w-1/5 font-normal">
                 Camp Title
               </label>
               <input
@@ -168,7 +164,7 @@ const UpdateCamp = ({ camps, updateCamp }) => {
                   id="s_time"
                   name="s_time"
                   type="time"
-                  value={campData.s_time}
+                  value={campData.stime}
                   onChange={handleChange}
                   className="w-2/3 border rounded px-3 py-2 mr-2"
                   required
@@ -178,7 +174,7 @@ const UpdateCamp = ({ camps, updateCamp }) => {
                   id="e_time"
                   name="e_time"
                   type="time"
-                  value={campData.e_time}
+                  value={campData.etime}
                   onChange={handleChange}
                   className="w-2/3 border rounded px-3 py-2 ml-2"
                   required
@@ -276,7 +272,7 @@ const UpdateCamp = ({ camps, updateCamp }) => {
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="max-h-full max-w-full object-contain"
+                    className="max-h-full max-w-full object-cover w-fill"
                   />
                 ) : (
                   <>
