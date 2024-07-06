@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate,useParams } from "react-router-dom";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
 
-const AddCamp = ({ addNewCamp }) => {
+const UpdateCamp = ({ camps, updateCamp }) => {
+    const { id } = useParams();
   const [campData, setCampData] = useState({
     title: "",
     description: "",
@@ -21,12 +22,23 @@ const AddCamp = ({ addNewCamp }) => {
   const navigate = useNavigate();
   const [imagePreview, setImagePreview] = useState(null);
 
-  const validatePhoneNumber = (phoneNumber) => {
-    // Regex for Sri Lankan phone numbers (allows +94 or 0 at the start)
-    const phoneRegex = /^(?:\+94\d{9}|0\d{9})$/;
+  useEffect(() => {
+    const campToUpdate = camps.find((camp) => camp.id === parseInt(id));
+    if (campToUpdate) {
+      setCampData(campToUpdate);
+      if (campToUpdate.image) {
+        setImagePreview(campToUpdate.image);
+      }
+    } else {
+      navigate("/camps");
+    }
+  }, [camps, id, navigate]);
 
+  const validatePhoneNumber = (phoneNumber) => {
+    const phoneRegex = /^(?:\+94|0)?[0-9]{9}$/;
     return phoneRegex.test(phoneNumber);
   };
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
@@ -40,6 +52,7 @@ const AddCamp = ({ addNewCamp }) => {
       setImagePreview(null);
     }
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCampData({ ...campData, [name]: value });
@@ -59,35 +72,43 @@ const AddCamp = ({ addNewCamp }) => {
       alert("Please correct the errors before submitting.");
       return;
     }
+
     try {
-      let imageUrl = "";
+      let imageUrl = campData.image;
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
-        const response = await axios.post("/api/upload", formData);
-        imageUrl = response.data.imageUrl;
+        try {
+          const response = await axios.post("/api/upload", formData);
+          imageUrl = response.data.imageUrl;
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          alert(
+            "Failed to upload image. The camp will be updated without a new image."
+          );
+        }
       }
 
-      const newCampData = {
+      const updatedCampData = {
         ...campData,
         image: imageUrl,
       };
 
-      await addNewCamp(newCampData);
-      navigate("/");
+      await updateCamp(updatedCampData);
+      navigate(`/camp-more-details/${id}`);
     } catch (error) {
-      console.error("Error adding new camp:", error);
-      alert("There was an error adding the new camp. Please try again.");
+      console.error("Error updating camp:", error);
+      alert("There was an error updating the camp. Please try again.");
     }
   };
 
   return (
     <div className="container mt-10">
       <div className="ml-60 mr-60 mb-16">
-        <h2 className="text-2xl font-semibold mb-5 ml-2">Create Camp</h2>
+        <h2 className="text-2xl font-semibold mb-5 ml-2">Update Camp</h2>
         <div className="p-2 m-3 rounded-lg bg-white relative drop-shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-4 m-6">
-            <div className="w-full flex items-center text-sm">
+            <div className="w-full flex items-center text-sm ">
               <label htmlFor="title" className="w-1/5 font-semibold">
                 Camp Title
               </label>
@@ -102,7 +123,10 @@ const AddCamp = ({ addNewCamp }) => {
             </div>
 
             <div className="w-full flex items-center text-sm">
-              <label htmlFor="description" className="w-1/5 mb-1 font-semibold">
+              <label
+                htmlFor="description"
+                className="w-1/5 block mb-1 font-semibold"
+              >
                 Description
               </label>
               <textarea
@@ -116,8 +140,11 @@ const AddCamp = ({ addNewCamp }) => {
             </div>
 
             <div className="flex w-full text-sm">
-              <div className="w-full flex items-center ">
-                <label htmlFor="date" className="w-2/5 mb-1 font-semibold">
+              <div className="w-full flex items-center">
+                <label
+                  htmlFor="date"
+                  className="w-2/5 block mb-1 font-semibold"
+                >
                   Date
                 </label>
                 <input
@@ -133,7 +160,7 @@ const AddCamp = ({ addNewCamp }) => {
               <div className="w-full flex items-center">
                 <label
                   htmlFor="time"
-                  className="w-1/3 mb-1 text-end mr-8 font-semibold"
+                  className="w-1/3 block mb-1 text-end mr-8 font-semibold"
                 >
                   Time
                 </label>
@@ -160,7 +187,10 @@ const AddCamp = ({ addNewCamp }) => {
             </div>
 
             <div className="w-full flex items-center text-sm">
-              <label htmlFor="location" className="w-1/5 mb-1 font-semibold">
+              <label
+                htmlFor="location"
+                className="w-1/5 block mb-1 font-semibold"
+              >
                 Location
               </label>
               <input
@@ -174,10 +204,10 @@ const AddCamp = ({ addNewCamp }) => {
             </div>
 
             <div className="w-full flex items-center text-sm">
-              <label htmlFor="phone" className="w-1/5 mb-1 font-semibold">
+              <label htmlFor="phone" className="w-1/5 block mb-1 font-semibold">
                 Contact No
               </label>
-              <div className="w-1/5 flex flex-col">
+              <div className="w-2/5 flex flex-col">
                 <input
                   placeholder="+94 7* **** ***"
                   id="phone1"
@@ -193,7 +223,7 @@ const AddCamp = ({ addNewCamp }) => {
                   <p className="text-red-500 text-xs mt-1">{errors.phone1}</p>
                 )}
               </div>
-              <div className="w-1/5 flex flex-col ml-2">
+              <div className="w-2/5 flex flex-col ml-2">
                 <input
                   placeholder="+94 7* **** ***"
                   id="phone2"
@@ -265,7 +295,7 @@ const AddCamp = ({ addNewCamp }) => {
               <button
                 type="button"
                 className="bg-gray-300 text-black px-6 py-2 rounded"
-                onClick={() => navigate("/camps")} // Or any other cancel action
+                onClick={() => navigate(`/camp-more-details/${id}`)}
               >
                 Cancel
               </button>
@@ -273,7 +303,7 @@ const AddCamp = ({ addNewCamp }) => {
                 type="submit"
                 className="bg-black text-white px-6 py-2 rounded"
               >
-                Save
+                Update
               </button>
             </div>
           </form>
@@ -283,4 +313,4 @@ const AddCamp = ({ addNewCamp }) => {
   );
 };
 
-export default AddCamp;
+export default UpdateCamp;

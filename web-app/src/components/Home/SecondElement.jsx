@@ -3,7 +3,7 @@ import img1 from "../../assets/img1.png";
 
 const SecondElement = () => {
   return (
-    <div className="flex flex-row items-center justify-center p-6 sm:flex-col sm:p-6">
+    < div className=" flex flex-row items-center justify-center p-6 sm:flex-col sm:p-6 ">
       <div className="w-1/2 flex justify-center items-center mb-4 md:mb-0 sm:w-[100%] ">
         <img src={img1} alt="Blood donation" className="w-[500%]" />
       </div> 
@@ -12,7 +12,7 @@ const SecondElement = () => {
           SAVE LIFE DONATE BLOOD!
         </h1>
         <p className="text-justify text-gray-700 mb-4">
-          Welcome to Donor Loop – your premier blood donation platform! We're
+          Welcome to Donor Loop your premier blood donation platform! We're
           dedicated to bridging the gap between donors and blood banks,
           leveraging technology to streamline the process. With real-time
           notifications, donors can respond promptly to urgent requests,

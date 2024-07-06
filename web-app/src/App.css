@@ -14,3 +14,24 @@
     transition: opacity 300ms;
   }
   
+.custom-modal {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+   border: none;
+}
+
+.modal-content {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.close-button {
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 20px;
+}
