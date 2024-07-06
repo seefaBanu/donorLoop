@@ -47,11 +47,11 @@ export default function Navbar() {
       {state.isAuthenticated ? (
         <>
           <div className="flex grow justify-center items-center">
-            <p className="text-xs text-white px-2" onClick = {() => navigate("/camps")} >Camps</p>
+            <p className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105" onClick = {() => navigate("/camps")} >Camps</p>
             {group.includes("blood_bank") && (
-              <p className="text-xs text-white px-2">Find Blood</p>
+              <p className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105" onClick={()=> navigate("/find-blood")}>Find Blood</p>
             )}
-            <p className="text-xs text-white px-2" onClick = {() => navigate("/request")}>Requests</p>
+            <p className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105" onClick = {() => navigate("/request")}>Requests</p>
           </div>
 
           <div className="flex justify-end items-center px-2">

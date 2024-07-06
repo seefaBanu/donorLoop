@@ -23,6 +23,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           "groups",
           "phone",
           "profile",
+          "admin", 
+          "blood_donor",
+          "blood_bank",
+          "Role"
         ],
       }}
     >

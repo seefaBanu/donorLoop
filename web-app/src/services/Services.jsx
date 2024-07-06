@@ -1,18 +1,19 @@
 import axios from "axios";
 
-const BLOOD_REQUEST_API_BASE_URL = "http://localhost:8080/blood-request";
+const API_BASE_URL = "http://localhost:8080/";
 
 class Services {
   getBloodRequests(token) {
-    return axios.get(BLOOD_REQUEST_API_BASE_URL, {
+    return axios.get(API_BASE_URL + "get-blood-requests", {
       headers: {
+        
         Authorization: `Bearer ${token}`,
       },
     });
   }
 
   createBloodRequest(bloodRequest, token) {
-    return axios.post(BLOOD_REQUEST_API_BASE_URL, bloodRequest, {
+    return axios.post(API_BASE_URL, bloodRequest, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -20,7 +21,7 @@ class Services {
   }
 
   getBloodRequestById(bloodRequestId, token) {
-    return axios.get(BLOOD_REQUEST_API_BASE_URL + "/" + bloodRequestId, {
+    return axios.get(API_BASE_URL + "/" + bloodRequestId, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -29,7 +30,7 @@ class Services {
 
   updateBloodRequest(bloodRequest, bloodRequestId, token) {
     return axios.put(
-      BLOOD_REQUEST_API_BASE_URL + "/" + bloodRequestId,
+      API_BASE_URL + "/" + bloodRequestId,
       bloodRequest,
       {
         headers: {
@@ -40,12 +41,33 @@ class Services {
   }
 
   deleteBloodRequest(bloodRequestId, token) {
-    return axios.delete(BLOOD_REQUEST_API_BASE_URL + "/" + bloodRequestId, {
+    return axios.delete(API_BASE_URL + "/" + bloodRequestId, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
   }
+
+  getBloodBanks(token){
+    return axios.get(API_BASE_URL + "get-blood-banks", {
+      headers: {
+        
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+
+  getBloodDonors(token){
+    return axios.get(API_BASE_URL + "get-blood-donors", {
+      headers: {
+        
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+
 }
 
 export default new Services();
