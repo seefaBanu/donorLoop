@@ -27,7 +27,6 @@ function App() {
       getBasicUserInfo().then((response) => {
         setUserDetails(response);
         setUserGroup(response.groups || []);
-
         // Fetch access token
         getAccessToken().then((token) => {
           setToken(token);
@@ -60,7 +59,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <Profile userDetails={userDetails} userGroup={userGroup} />
+                  <Profile userDetails={userDetails} userGroup={userGroup} token={token} />
                 }
               />
               <Route
@@ -73,14 +72,24 @@ function App() {
                   />
                 }
               />
-              <Route path="/add-camp" element={<AddCamp token={token} />} />
-              <Route path="/camps" element={<Camp camps={camps} />} />
+              {userGroup.includes("blood_bank") && (
+                <>
+                  <Route path="/add-camp" element={<AddCamp token={token} userDetails={userDetails}/>} />
+                  <Route
+                    path="/update-camp/:id"
+                    element={<UpdateCamp camps={camps} token={token} />}
+                  />
+                  <Route path="/find-blood" element={<FindBlood />} />
+                </>
+              )}
+              <Route
+                path="/camps"
+                element={<Camp camps={camps} group={userGroup} />}
+              />
               <Route
                 path="/camp-more-details/:id"
-                element={<CampMoreDetails camps={camps} token={token} />}
+                element={<CampMoreDetails camps={camps} token={token} groups={userGroup}/>}
               />
-              <Route path="/update-camp/:id" element = {<UpdateCamp camps={camps} token = {token}/>}/>
-              <Route path="/find-blood" element={<FindBlood />} />
             </Route>
           ) : (
             <Route>

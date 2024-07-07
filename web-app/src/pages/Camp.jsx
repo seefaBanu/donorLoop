@@ -9,7 +9,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Camp.css";
 
-export const Camp = ({ camps }) => {
+export const Camp = ({ camps , group}) => {
   const navigate = useNavigate();
 
   const handleMoreDetailsClick = (campId) => {
@@ -88,7 +88,7 @@ export const Camp = ({ camps }) => {
             />
             <SearchIcon className="flex text-sm text-gray-500" />
           </div>
-
+          { group.includes("blood_bank") && (
           <div className="flex ">
             <button
               className="flex border bg-black align-middle my-auto text-white text-sm p-2 rounded-3xl hover:bg-gray-600 hover:text-black hover:border transition duration-500"
@@ -96,7 +96,7 @@ export const Camp = ({ camps }) => {
             >
               <p className="text-sm mr-2"> + Add Camps</p>
             </button>
-          </div>
+          </div>)}
         </div>
       </div>
 

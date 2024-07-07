@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
 
-const AddCamp = ({ token }) => {
+const AddCamp = ({ token, userDetails }) => {
   const [campData, setCampData] = useState({
     title: "",
     description: "",
@@ -14,6 +14,7 @@ const AddCamp = ({ token }) => {
     phone1: "",
     phone2: "",
     reglink: "",
+    bloodBankId: userDetails.userid,
   });
 
   const [selectedFile, setSelectedFile] = useState(null);
