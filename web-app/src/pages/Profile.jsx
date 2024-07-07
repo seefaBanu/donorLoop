@@ -5,7 +5,7 @@ import TopProfile from "../components/DonorProfile/TopProfile";
 import DonationHistory from "../components/DonorProfile/DonationHistory";
 import BloodAvailablity from "../components/DonorProfile/BloodAvailablity";
 
-export const Profile = ({ userDetails, userGroup }) => {
+export const Profile = ({ userDetails, userGroup, token }) => {
   const [activeTab, setActiveTab] = useState("About");
 
   return (
@@ -51,8 +51,8 @@ export const Profile = ({ userDetails, userGroup }) => {
           <hr className="border-gray-300" />
           <div className="p-4 ">
             {activeTab === "About" && <AboutDonor userDetails={userDetails} />}
-            {activeTab === "Donation History" && <DonationHistory />}
-            {activeTab === "Blood Availablity" && <BloodAvailablity />}
+            {activeTab === "Donation History" && <DonationHistory  userDetails={userDetails} token={token} />}
+            {activeTab === "Blood Availablity" && <BloodAvailablity userDetails={userDetails} token={token} />}
           </div>
         </div>
       </div>
