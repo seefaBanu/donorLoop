@@ -43,8 +43,9 @@ public class BloodRequests {
     @Column(nullable = false)
     private String status;
 
-    @Column(nullable = false)
     private String location;
+
+    private String district;
 
     private String specialNote;
 }

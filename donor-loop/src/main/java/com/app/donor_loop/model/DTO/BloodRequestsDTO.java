@@ -29,6 +29,6 @@ public class BloodRequestsDTO {
     private String status;
 
     private String location;
-
+    private String district;
     private String specialNote;
 }

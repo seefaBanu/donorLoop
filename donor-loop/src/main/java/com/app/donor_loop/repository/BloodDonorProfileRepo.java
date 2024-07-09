@@ -10,4 +10,6 @@ public interface BloodDonorProfileRepo  extends JpaRepository<BloodDonorProfile,
     Optional<BloodDonorProfile> findByBloodDonorUserId(String id);
 
     List<BloodDonorProfile> findByDonationStatus(boolean b);
+
+    List<BloodDonorProfile> findByDistrict(String location);
 }

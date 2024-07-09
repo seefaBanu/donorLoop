@@ -13,7 +13,7 @@ class Services {
   }
 
   createBloodRequest(bloodRequest, token) {
-    return axios.post(API_BASE_URL, bloodRequest, {
+    return axios.post(API_BASE_URL+"create-blood-request", bloodRequest, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

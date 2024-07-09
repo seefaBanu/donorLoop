@@ -4,7 +4,6 @@ import SingleSelectDropDown from "../Items/SingleSelectDropDown";
 import Services from "../../services/Services";
 
 const AddRequestPopup = ({ onClose, token, userDetails }) => {
-  // State to hold form data
   const [formData, setFormData] = useState({
     bloodBankId: userDetails.userid, // Assuming this is a fixed value or should be dynamically set
     bloodBankName: userDetails.givenName || "",
@@ -13,12 +12,14 @@ const AddRequestPopup = ({ onClose, token, userDetails }) => {
     bloodNeeded: [],
     reqDate: "",
     status: "",
-    location: "",
+    location: userDetails.location || "",
+    district: "",
     specialNote: "",
   });
 
   // State to hold validation errors
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   // Function to handle form submission
   const handleSubmit = (e) => {
@@ -34,7 +35,7 @@ const AddRequestPopup = ({ onClose, token, userDetails }) => {
     if (!formData.reqDate)
       validationErrors.reqDate = "Requested Date is required";
     if (!formData.status) validationErrors.status = "Status is required";
-    if (!formData.location) validationErrors.location = "Location is required";
+    if (!formData.district) validationErrors.district = "Location is required";
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -42,18 +43,18 @@ const AddRequestPopup = ({ onClose, token, userDetails }) => {
     }
 
     const bloodRequest = { ...formData };
-
+    setLoading(true);
     Services.createBloodRequest(bloodRequest, token)
       .then((response) => {
         console.log("Blood request submitted:", response.data);
         onClose(); // Close the popup after successful submission
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error submitting blood request:", error);
       });
   };
 
-  // Function to handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -163,17 +164,17 @@ const AddRequestPopup = ({ onClose, token, userDetails }) => {
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Location
+              District
             </label>
             <input
               type="text"
-              name="location"
-              value={formData.location}
+              name="district"
+              value={formData.district}
               onChange={handleChange}
               className="mt-1 block w-full p-2 text-sm font-light text-gray-500 border-gray-300 rounded-lg border  focus:border-white sm:text-sm"
             />
-            {errors.location && (
-              <p className="text-red-500 text-sm">{errors.location}</p>
+            {errors.district && (
+              <p className="text-red-500 text-sm">{errors.district}</p>
             )}
           </div>
           <div className="mb-4">
@@ -196,12 +197,14 @@ const AddRequestPopup = ({ onClose, token, userDetails }) => {
             >
               Cancel
             </button>
+            {loading ? ( <p className="text-sm text-gray-500">Loading...</p>) : (
             <button
               type="submit"
               className="py-2 px-4 border border-transparent text-sm font-medium rounded-3xl text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Add Request
             </button>
+            )}
           </div>
         </form>
       </div>

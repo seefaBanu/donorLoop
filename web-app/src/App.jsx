@@ -13,6 +13,7 @@ import FindBlood from "./pages/FindBlood";
 import CampMoreDetails from "./pages/Camp/CampMoreDetails";
 import axios from "axios"; // Import axios for API calls
 import UpdateCamp from "./pages/Camp/UpdateCamp";
+import Notification from "./pages/Notification";
 
 function App() {
   const { state, getBasicUserInfo, getAccessToken } = useAuthContext();
@@ -73,6 +74,13 @@ function App() {
                   />
                 }
               />
+                   <Route
+                path="/notification"
+                element={
+                  <Notification  token={token} userId={userDetails.userid}/>
+                }
+              />
+              
               {userGroup.includes("blood_bank") && (
                 <>
                   <Route path="/add-camp" element={<AddCamp token={token} userDetails={userDetails}/>} />
