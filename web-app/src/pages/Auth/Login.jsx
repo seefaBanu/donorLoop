@@ -1,6 +1,6 @@
 import React from "react";
-import Logo from "../assets/logo.png";
-import Bg from "../assets/signin.png";
+import Logo from "../../assets/logo.png";
+import Bg from "../../assets/signin.png";
 import { FaPeopleArrows } from "react-icons/fa";
 import { FaHospital } from "react-icons/fa";
 import { AuthProvider } from "@asgardeo/auth-react";

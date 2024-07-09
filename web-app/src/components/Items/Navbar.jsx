@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Logo from "../assets/logo.png";
+import Logo from "../../assets/logo.png";
 import { IoIosNotifications, IoMdClock, IoMdClose, IoMdMenu } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { useAuthContext } from "@asgardeo/auth-react";
@@ -46,7 +46,7 @@ export default function Navbar() {
         <div className="bg-white rounded-3xl">
           <img src={Logo} alt="Logo" className="h-10 w-10 " />
         </div>
-        <h1 className="font-bold text-white px-2 sm:hidden">DONOR LOOP</h1>
+        <h1 className="font-bold text-white w-60 px-2 sm:hidden sm-w-0">DONOR LOOP</h1>
       </div>
 
       {state.isAuthenticated ? (

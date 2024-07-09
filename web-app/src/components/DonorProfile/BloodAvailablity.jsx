@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
-import Notification from "../Notification";
+import Notification from "../Items/Notification";
 import axios from "axios";
-import SingleSelectDropDown from "../SingleSelectDropDown";
+import SingleSelectDropDown from "../Items/SingleSelectDropDown";
 import CreateBloodAvailability from "./CreateBloodAvailability";
+import { Spinner } from "@material-tailwind/react";
 
 const BloodAvailability = ({ userDetails, token }) => {
   const [bloodGroups, setBloodGroups] = useState([]);
@@ -12,6 +13,7 @@ const BloodAvailability = ({ userDetails, token }) => {
   const [availabilityEdits, setAvailabilityEdits] = useState({});
   const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [timeout, setTimeoutState] = useState(false);
 
   useEffect(() => {
     fetchBloodAvailability();
@@ -111,15 +113,17 @@ const BloodAvailability = ({ userDetails, token }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return timeout ? (
+      <div className="w-full text-center mt-20">
+        Request timed out. Please try again later.
+      </div>
+    ) : (
+      <Spinner />
+    );
   }
 
-
-
   if (bloodGroups.length === 0) {
-    return (
-     <CreateBloodAvailability bloodBankId = {bloodBankId} token={token}/>
-    );
+    return <CreateBloodAvailability bloodBankId={bloodBankId} token={token} userDetails = {userDetails} />;
   }
 
   return (

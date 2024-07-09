@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
-import SingleSelectDropDown from "../SingleSelectDropDown";
-import Notification from "../Notification";
+import SingleSelectDropDown from "../Items/SingleSelectDropDown";
+import Notification from "../Items/Notification";
 import axios from "axios";
 
-const CreateBloodAvailability = ({ bloodBankId, token }) => {
+const CreateBloodAvailability = ({ bloodBankId, token, userDetails }) => {
   const [notification, setNotification] = useState(null);
   const [showCreatePopup, setShowCreatePopup] = useState(false);
   const [newBloodGroups, setNewBloodGroups] = useState([
@@ -19,10 +19,23 @@ const CreateBloodAvailability = ({ bloodBankId, token }) => {
   ]);
 
   const handleCreateBloodAvailability = async () => {
+    const profileDTO = {
+      bloodBankProfile: {
+        bloodBankUserId: userDetails.userid || "",
+        bloodBankName: userDetails.givenName || "",
+        cluster: userDetails.cluster || "", 
+        tpNumber: userDetails.phoneNumber || "",
+        location: userDetails.location || "", 
+        district: userDetails.district || "", 
+      },
+      bloodAvailabilityList: newBloodGroups,
+    };
+
+
     try {
       await axios.post(
         "http://localhost:8080/create-blood-availability",
-        newBloodGroups,
+        profileDTO,
         {
           headers: {
             Authorization: `Bearer ${token}`,

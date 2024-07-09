@@ -1,29 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { IoSearchCircle } from "react-icons/io5";
+import { Spinner } from "@material-tailwind/react";
 
 // Placeholder data for demonstration
-const bloodBanks = [
-  {
-    id: 1,
-    name: "Blood Bank A",
-    cluster: "Cluster 1",
-    tpNumber: "0712345678",
-    availableBloods: "A+, B+",
-    location: "Location A",
-  },
-  {
-    id: 2,
-    name: "Blood Bank B",
-    cluster: "Cluster 2",
-    tpNumber: "0723456789",
-    availableBloods: "O+, AB-",
-    location: "Location B",
-  },
-];
-
-const FindBloodFromBloodBanks = () => {
+const FindBloodFromBloodBanks = ({ token }) => {
+  const [bloodBanks, setBloodBanks] = useState([]);
   const [selectedBank, setSelectedBank] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch blood banks from the backend
+    const fetchBloodBanks = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/find-blood/blood-banks",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setBloodBanks(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching blood banks:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchBloodBanks();
+  }, []);
 
   const handleMoreDetailsClick = (bank) => {
     setSelectedBank(bank);
@@ -39,9 +47,13 @@ const FindBloodFromBloodBanks = () => {
 
   const filteredBloodBanks = bloodBanks.filter(
     (bank) =>
-      bank.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      bank.bloodBankName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       bank.cluster.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div>
@@ -52,7 +64,7 @@ const FindBloodFromBloodBanks = () => {
           </h1>
 
           <h1 className="text-xs font-light text-gray-700 ">
-            Availablity of blood groups in the Blood Banks
+            Availability of blood groups in the Blood Banks
           </h1>
         </div>
         <div className="flex border my-auto border-gray-300 bg-white font-light px-4 text-sm text-gray-400 p-2 gap-4 rounded-3xl items-center align-middle">
@@ -98,19 +110,19 @@ const FindBloodFromBloodBanks = () => {
                 className="flex justify-between items-center my-2 bg-white rounded-xl p-2"
               >
                 <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.name}
+                  {bank.bloodBankName || "-"}
                 </div>
                 <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.cluster}
+                  {bank.cluster || "-"}
                 </div>
                 <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.tpNumber}
+                  {bank.tpNumber || "-"}
+                </div>
+                <div className="flex-1 text-sm px-4 py-2 gap-2 text-center">
+                  {bank.availableBloodGroups || "-"}
                 </div>
                 <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.availableBloods}
-                </div>
-                <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.location}
+                  {bank.location || "-"}
                 </div>
                 <div className="flex-1 text-sm px-4 py-2 text-center">
                   <button
@@ -132,7 +144,7 @@ const FindBloodFromBloodBanks = () => {
             <h2 className="text-xl font-bold mb-4">Blood Bank Details</h2>
             <div>
               <p>
-                <strong>Name:</strong> {selectedBank.name}
+                <strong>Name:</strong> {selectedBank.bloodBankName}
               </p>
               <p>
                 <strong>Cluster:</strong> {selectedBank.cluster}
@@ -142,7 +154,7 @@ const FindBloodFromBloodBanks = () => {
               </p>
               <p>
                 <strong>Available Bloods:</strong>{" "}
-                {selectedBank.availableBloods}
+                {selectedBank.availableBloodGroups}
               </p>
               <p>
                 <strong>Location:</strong> {selectedBank.location}

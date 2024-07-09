@@ -9,7 +9,7 @@ import {
 import { IoSearchCircle } from "react-icons/io5";
 import Services from "../services/Services";
 import AddRequestPopup from "../components/Requests/AddRequestPopup";
-import MultiSelectDropDown from "../components/MultiSelectDropDown";
+import MultiSelectDropDown from "../components/Items/MultiSelectDropDown";
 
 const BloodRequests = ({ token, userDetails, groups }) => {
   const [requests, setRequests] = useState([]);

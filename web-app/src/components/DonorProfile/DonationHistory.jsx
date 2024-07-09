@@ -1,15 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoSearchCircle } from "react-icons/io5";
 import AddDonationPopup from "./AddDonationPopup";
-import { useState } from "react";
+import ConfirmationPopup from "../Items/ConfirmationPopup";
+import axios from "axios";
+import { MdDelete, MdEdit } from "react-icons/md";
 
-const DonationHistory = () => {
+const DonationHistory = ({ userDetails, token }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [donations, setDonations] = useState([]);
+  const [selectedDonation, setSelectedDonation] = useState(null);
+  const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
+  const [donationToDelete, setDonationToDelete] = useState(null);
+
+  useEffect(() => {
+    // Fetch donation history from the backend
+    const fetchDonations = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/donation-history/donor/${userDetails.userid}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setDonations(data);
+        } else {
+          console.error("Failed to fetch donation history");
+        }
+      } catch (error) {
+        console.error("Error fetching donation history:", error);
+      }
+    };
+
+    fetchDonations();
+  }, [token, userDetails.userid]);
 
   const handleAddDonation = (donation) => {
     setDonations([...donations, donation]);
   };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/donation-history/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setDonations(
+          donations.filter((donation) => donation.donationHistoryId !== id)
+        );
+      } else {
+        console.error("Failed to delete donation history");
+      }
+    } catch (error) {
+      console.error("Error deleting donation history:", error);
+    }
+    setIsConfirmationPopupOpen(false);
+  };
+
+  const handleEdit = (donation) => {
+    setSelectedDonation(donation);
+    setIsPopupOpen(true);
+  };
+
+  const confirmDelete = (id) => {
+    setDonationToDelete(id);
+    setIsConfirmationPopupOpen(true);
+  };
+
   return (
     <div>
       <div className="flex justify-end p-8 gap-8 align-middle">
@@ -17,49 +82,79 @@ const DonationHistory = () => {
           Search Donations
           <IoSearchCircle className="w-4 h-4" />
         </div>
-        <div onClick={() => setIsPopupOpen(true)} className="flex border bg-black align-middle my-auto text-white text-sm p-2 rounded-3xl hover:bg-white hover:text-black hover:border transition duration-500">
-          <p >+ Add New Donation</p>
+        <div
+          onClick={() => {
+            setSelectedDonation(null);
+            setIsPopupOpen(true);
+          }}
+          className="flex border bg-black align-middle my-auto text-white text-sm p-2 rounded-3xl hover:bg-white hover:text-black hover:border transition duration-500 "
+        >
+          <p>+ Add New Donation</p>
         </div>
       </div>
-
-      <div className="flex flex-col min-w-full bg-gray-200 rounded-3xl p-8 ">
-        <div className="flex flex-col">
-          <div className="flex flex-row">
-            <th className="py-2 px-4 text-left w-1/3 border-gray-300 text-gray-500 font-light text-sm">
+      <div className="flex flex-col w-full bg-gray-200 rounded-3xl p-8 sm:p-4 overflow-x-auto ">
+        <div className="flex flex-col w-full sm:w-fit ">
+          <div className="flex flex-row justify-between">
+            <th className="flex-1 px-4 text-center border-gray-300 text-gray-500 font-light text-sm">
               Date
             </th>
-            <th className="py-2 px-4 text-left w-1/3 borde r-gray-300 text-gray-500 font-light text-sm">
+            <th className="flex-1 px-4 text-center border-gray-300 text-gray-500 font-light text-sm">
               Blood Units
             </th>
-            <th className="py-2 px-4 text-left w-1/3 border-gray-300 text-gray-500 font-light text-sm">
+            <th className="flex-1 px-4 text-center border-gray-300 text-gray-500 font-light text-sm">
               Location
+            </th>
+            <th className="flex-1 px-4 text-center border-gray-300 text-gray-500 font-light text-sm">
+              Actions
             </th>
           </div>
         </div>
-        <div className="flex flex-col my-2">
-          <div className="flex p-2 font-light text-sm flex-row  bg-white my-2 rounded-3xl">
-            <div className="py-2 px-4 w-1/3 ">01/01/2023</div>
-            <div className="py-2 px-4 w-1/3 ">2 Units</div>
-            <div className="py-2 px-4 w-1/3 ">New York, NY</div>
-          </div>
-          <div className="flex p-2 font-light text-sm flex-row  bg-white my-2 rounded-3xl">
-            <div className="py-2 px-4 w-1/3 ">01/01/2023</div>
-            <div className="py-2 px-4 w-1/3 ">2 Units</div>
-            <div className="py-2 px-4 w-1/3 ">New York, NY</div>
-          </div>
-          <div className="flex p-2 font-light text-sm flex-row  bg-white my-2 rounded-3xl">
-            <div className="py-2 px-4 w-1/3 ">01/01/2023</div>
-            <div className="py-2 px-4 w-1/3 ">2 Units</div>
-            <div className="py-2 px-4 w-1/3 ">New York, NY</div>
-          </div>
-
-          {/* Add more donation history rows here */}
+        <div className="flex flex-col w-full my-2  sm:w-fit">
+          {donations.map((donation) => (
+            <div
+              key={donation.donationHistoryId}
+              className="flex py-3 w-full  font-light text-sm flex-row bg-white my-1 rounded-3xl justify-between "
+            >
+              <div className="flex-1 px-4 text-center ">
+                {new Date(donation.donatedDate).toLocaleDateString()}
+              </div>
+              <div className="flex-1 px-4 text-center ">
+                {donation.bloodUnits} Units
+              </div>
+              <div className="flex-1 px-4 text-center ">
+                {donation.donatedLocation}
+              </div>
+              <div className="flex-1 px-4 text-center flex gap-4 justify-center">
+                <button
+                  onClick={() => handleEdit(donation)}
+                  className="text-gray-500 hover:cursor-pointer"
+                >
+                  <MdEdit />
+                </button>
+                <button
+                  onClick={() => confirmDelete(donation.donationHistoryId)}
+                  className="text-gray-500 hover:cursor-pointer"
+                >
+                  <MdDelete />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
       <AddDonationPopup
         isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}
         onSubmit={handleAddDonation}
+        userDetails={userDetails}
+        token={token}
+        selectedDonation={selectedDonation}
+      />
+      <ConfirmationPopup
+        isOpen={isConfirmationPopupOpen}
+        message="Are you sure you want to delete this donation history? This cannot be undone"
+        onConfirm={() => handleDelete(donationToDelete)}
+        onCancel={() => setIsConfirmationPopupOpen(false)}
       />
     </div>
   );

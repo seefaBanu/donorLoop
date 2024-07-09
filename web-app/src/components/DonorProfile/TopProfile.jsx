@@ -1,16 +1,102 @@
 import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import Bg from "../../assets/signin.png";
+import axios from "axios";
 
-const TopProfile = ({ userDetails }) => {
+const TopProfile = ({ userDetails, token }) => {
   const [group, setGroup] = useState("");
-  const [address, setAddress] = useState("");
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
     if (userDetails && userDetails.groups) {
       setGroup(userDetails.groups);
     }
-  }, [userDetails]);
+
+    // Fetch user profile
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/blood-donor-profile/${userDetails.userid}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          setProfile(response.data);
+          setStatus(response.data.donationStatus);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // Profile not found, show create profile button
+          setProfile(null);
+        } else {
+          console.error("Error fetching profile:", error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [userDetails, token]);
+
+  const handleCreateProfile = async () => {
+    const profileData = {
+      bloodDonorUserId: userDetails.userid,
+      bloodDonorName: userDetails.givenName,
+      bloodGroup: userDetails.bloodgroup,
+      mail: userDetails.email,
+      tpNumber: userDetails.phoneNumber,
+      address: userDetails.address.street_address,
+      district: userDetails.district,
+      donationStatus: false,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/blood-donor-profile",
+        profileData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setProfile(response.data);
+    } catch (error) {
+      console.error("Error creating profile:", error);
+    }
+  };
+
+  const handleUpdateStatus = async (status) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/blood-donor-profile/status/${userDetails.userid}`,
+        status,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.status === 200) {
+        setProfile({ ...profile, readyToDonate: status });
+
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="z-0 grid grid-rows-2 w-full max-w-4xl bg-white rounded-3xl overflow-hidden ">
@@ -44,14 +130,49 @@ const TopProfile = ({ userDetails }) => {
               <p className="text-gray-600">Blood Donor</p>
             </div>
           </div>
-          <div className="flex-col items-center  text-center m-auto">
-            <button className="bg-red-600 text-white  text-center py-2 px-4 rounded-full shadow-lg hover:bg-red-700 transition duration-300">
-              Ready to Donate
-            </button>
-            <p className="text-gray-600 mt-2 text-sm text-center">
-              Status: Available
-            </p>
-          </div>
+          {profile ? (
+            <div className="flex-col items-center text-center m-auto">
+              <p className="text-gray-600 mt-2 text-sm text-center">
+                Ready to donate
+              </p>
+              <div className="flex justify-center mt-4 border-2 rounded-3xl">
+                <button
+                  onClick={() => handleUpdateStatus(true)}
+                  className={`
+                    ${
+                      status === true
+                        ? "bg-green-600  text-white shadow-lg"
+                        : "text-black"
+                    }
+                     text-sm text-center py-2 px-4 rounded-full  transition duration-300 hover:cursor-pointer`}
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => handleUpdateStatus(false)}
+                  className={` ${
+                    status === false
+                      ? "bg-red-600  text-white shadow-lg"
+                      : "text-black"
+                  }              text-sm text-center py-2 px-4 rounded-full transition duration-300 hover:cursor-pointer`}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex-col items-center  text-center m-auto">
+              <p className="text-gray-600 mt-2 text-sm text-center">
+                Click here to
+              </p>
+              <button
+                onClick={handleCreateProfile}
+                className="bg-green-600 text-white text-sm text-center py-2 px-4 rounded-full shadow-lg  transition duration-300 hover:cursor-pointer"
+              >
+                Create a Donor Profile
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import AboutDonor from "../components/DonorProfile/AboutDonor";
-import TopProfile from "../components/DonorProfile/TopProfile";
-import DonationHistory from "../components/DonorProfile/DonationHistory";
-import BloodAvailablity from "../components/DonorProfile/BloodAvailablity";
+import AboutDonor from "../../components/DonorProfile/AboutDonor";
+import TopProfile from "../../components/DonorProfile/TopProfile";
+import DonationHistory from "../../components/DonorProfile/DonationHistory";
+import BloodAvailablity from "../../components/DonorProfile/BloodAvailablity";
 
 export const Profile = ({ userDetails, userGroup, token }) => {
   const [activeTab, setActiveTab] = useState("About");
@@ -11,7 +11,7 @@ export const Profile = ({ userDetails, userGroup, token }) => {
   return (
     <div className=" px-4 py-8 mt-20">
       <div className="min-h-screen flex flex-col items-center bg-gray-100 py-8 ">
-        <TopProfile userDetails={userDetails} />
+        <TopProfile userDetails={userDetails} token={token} />
         <div className="mt-8 w-full max-w-4xl rounded-3xl ">
           <div className="flex ">
             <button

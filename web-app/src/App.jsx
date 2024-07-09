@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Layout from "./components/Layout";
-import Camp from "./pages/Camp";
-import Profile from "./pages/Profile";
-import AddCamp from "./pages/AddCamp";
-import Login from "./pages/Login";
+import Layout from "./components/Items/Layout";
+import Camp from "./pages/Camp/Camp";
+import Profile from "./pages/Profile/Profile";
+import AddCamp from "./pages/Camp/AddCamp";
+import Login from "./pages/Auth/Login";
 import { useAuthContext } from "@asgardeo/auth-react";
 import BloodRequests from "./pages/BloodRequests";
-import Error from "./pages/Error";
+import Error from "./pages/Auth/Error";
 import FindBlood from "./pages/FindBlood";
-import CampMoreDetails from "./pages/CampMoreDetails";
+import CampMoreDetails from "./pages/Camp/CampMoreDetails";
 import axios from "axios"; // Import axios for API calls
-import UpdateCamp from "./pages/UpdateCamp";
+import UpdateCamp from "./pages/Camp/UpdateCamp";
 
 function App() {
   const { state, getBasicUserInfo, getAccessToken } = useAuthContext();
@@ -26,6 +26,7 @@ function App() {
       // Fetch user details
       getBasicUserInfo().then((response) => {
         setUserDetails(response);
+        console.log("jjjj"+userDetails)
         setUserGroup(response.groups || []);
         // Fetch access token
         getAccessToken().then((token) => {
@@ -79,7 +80,7 @@ function App() {
                     path="/update-camp/:id"
                     element={<UpdateCamp camps={camps} token={token} />}
                   />
-                  <Route path="/find-blood" element={<FindBlood />} />
+                  <Route path="/find-blood" element={<FindBlood token = {token} />} />
                 </>
               )}
               <Route
