@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface NotificationRepo extends JpaRepository<Notification, Long> {
-    List<Notification> findByUserId(String userId);
+    List<Notification> findByUserIdOrderByTimestampDesc(String userId);
 
 }

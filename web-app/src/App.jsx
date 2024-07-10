@@ -57,7 +57,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {state.isAuthenticated ? (
-            <Route element={<Layout userDetails={userDetails} />}>
+            <Route element={<Layout userDetails={userDetails} token = {token}  />}>
               <Route
                 path="/"
                 element={

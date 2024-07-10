@@ -23,20 +23,26 @@ public class NotificationService {
     }
 
     public List<Notification> getNotificationsByUserId(String userId) {
-        return notificationRepository.findByUserId(userId);
+        return notificationRepository.findByUserIdOrderByTimestampDesc(userId);
     }
 
     public Notification saveNotification(Notification notification) {
         return notificationRepository.save(notification);
     }
 
-    public void markNotificationAsRead(Long id) {
-        Notification notification = notificationRepository.findById(id).orElseThrow(() -> new RuntimeException("Notification not found"));
+    public void deleteNotification(Long id) {
+        notificationRepository.deleteById(id);
+    }
+
+    public void markAsRead(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() -> new RuntimeException("Notification not found"));
         notification.setIsRead(true);
         notificationRepository.save(notification);
     }
 
-    public void deleteNotification(Long id) {
-        notificationRepository.deleteById(id);
+    public void markAllAsRead(String userId) {
+        List<Notification> notifications = notificationRepository.findByUserIdOrderByTimestampDesc(userId);
+        notifications.forEach(notification -> notification.setIsRead(true));
+        notificationRepository.saveAll(notifications);
     }
 }

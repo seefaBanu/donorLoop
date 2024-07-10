@@ -134,7 +134,7 @@ const AddCamp = ({ token, userDetails }) => {
                 <label htmlFor="time" className="w-1/3 mb-1 text-end mr-8 font-norml">Time</label>
                 <input
                   id="s_time"
-                  name="s_time"
+                  name="stime"
                   type="time"
                   value={campData.stime}
                   onChange={handleChange}
@@ -144,7 +144,7 @@ const AddCamp = ({ token, userDetails }) => {
                 To{" "}
                 <input
                   id="e_time"
-                  name="e_time"
+                  name="etime"
                   type="time"
                   value={campData.etime}
                   onChange={handleChange}

@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useEffect } from "react";
 
-export default function Layout({ userDetails}) {
+export default function Layout({ userDetails, token}) {
 
   useEffect (() => {
     console.log("User details 455", userDetails);
@@ -11,7 +11,7 @@ export default function Layout({ userDetails}) {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
-      <Navbar userDetails = {userDetails} />
+      <Navbar userDetails = {userDetails} token = {token}/>
       <div className="flex flex-col flex-1">
         <Outlet />
       </div>

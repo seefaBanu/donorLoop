@@ -19,8 +19,7 @@ public class Camp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long campId;
-
-    private long bloodBankId;
+    private String bloodBankId;
     private String title;
     private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

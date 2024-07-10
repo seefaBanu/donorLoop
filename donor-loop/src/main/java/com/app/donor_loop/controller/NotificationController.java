@@ -44,16 +44,21 @@ public class NotificationController {
         Notification savedNotification = notificationService.saveNotification(notification);
         return ResponseEntity.ok(savedNotification);
     }
-
-    @PutMapping("/read/{id}")
-    public ResponseEntity<Void> markNotificationAsRead(@PathVariable Long id) {
-        notificationService.markNotificationAsRead(id);
-        return ResponseEntity.ok().build();
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
         notificationService.deleteNotification(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/mark-as-read/{notificationId}")
+    public ResponseEntity<Void> markAsRead(@PathVariable Long notificationId) {
+        notificationService.markAsRead(notificationId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/mark-all-as-read/{userId}")
+    public ResponseEntity<Void> markAllAsRead(@PathVariable String userId) {
+        notificationService.markAllAsRead(userId);
         return ResponseEntity.ok().build();
     }
 
