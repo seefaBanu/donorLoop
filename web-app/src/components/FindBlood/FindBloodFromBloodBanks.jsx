@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { IoSearchCircle } from "react-icons/io5";
-import { Spinner } from "@material-tailwind/react";
+import Spinner from "../Items/Spinner";
 
 // Placeholder data for demonstration
-const FindBloodFromBloodBanks = ({ token }) => {
+const FindBloodFromBloodBanks = ({ token , userDetails}) => {
   const [bloodBanks, setBloodBanks] = useState([]);
   const [selectedBank, setSelectedBank] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,10 +51,6 @@ const FindBloodFromBloodBanks = ({ token }) => {
       bank.cluster.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) {
-    return <Spinner />;
-  }
-
   return (
     <div>
       <div className="flex justify-between items-center mb-4 gap-4">
@@ -80,62 +76,70 @@ const FindBloodFromBloodBanks = ({ token }) => {
       </div>
 
       <div className="overflow-x-auto">
-        <div className="min-w-full ">
-          <div className="bg-gray-100">
-            <div className="flex justify-between bg-gray-100 items-center mt-6">
-              <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
-                Blood Bank
-              </div>
-              <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
-                Cluster
-              </div>
-              <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
-                Mobile Number
-              </div>
-              <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
-                Available Bloods
-              </div>
-              <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
-                Location
-              </div>
-              <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
-                Actions
+        {loading ? (
+          <Spinner />
+        ) : (
+          <div className="min-w-full ">
+            <div className="bg-gray-100">
+              <div className="flex justify-between bg-gray-100 items-center mt-6">
+                <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
+                  Blood Bank
+                </div>
+                <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
+                  Cluster
+                </div>
+                <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
+                  Mobile Number
+                </div>
+                <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
+                  Available Bloods
+                </div>
+                <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
+                  District
+                </div>
+                <div className="flex-1 text-sm font-regular text-gray-400 px-4 py-2 text-center">
+                  Actions
+                </div>
               </div>
             </div>
+            <div className="">
+              {filteredBloodBanks.map((bank) => (
+                <>
+                  {bank.bloodBankId != userDetails.userid && (
+                    <div
+                      key={bank.id}
+                      className="flex justify-between items-center my-2 bg-white rounded-xl p-2"
+                    >
+                      <div className="flex-1 text-sm px-4 py-2 text-center">
+                        {bank.bloodBankName || "-"}
+                      </div>
+                      <div className="flex-1 text-sm px-4 py-2 text-center">
+                        {bank.cluster || "-"}
+                      </div>
+                      <div className="flex-1 text-sm px-4 py-2 text-center">
+                        {bank.tpNumber || "-"}
+                      </div>
+                      <div className="flex-1 text-sm px-4 py-2 gap-2 text-center">
+                        {bank.availableBloodGroups || "-"}
+                      </div>
+                      <div className="flex-1 text-sm px-4 py-2 text-center">
+                        {bank.district || "-"}
+                      </div>
+                      <div className="flex-1 text-sm px-4 py-2 text-center">
+                        <button
+                          className="text-blue-500 hover:underline"
+                          onClick={() => handleMoreDetailsClick(bank)}
+                        >
+                          More Details
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ))}
+            </div>
           </div>
-          <div className="">
-            {filteredBloodBanks.map((bank) => (
-              <div
-                key={bank.id}
-                className="flex justify-between items-center my-2 bg-white rounded-xl p-2"
-              >
-                <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.bloodBankName || "-"}
-                </div>
-                <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.cluster || "-"}
-                </div>
-                <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.tpNumber || "-"}
-                </div>
-                <div className="flex-1 text-sm px-4 py-2 gap-2 text-center">
-                  {bank.availableBloodGroups || "-"}
-                </div>
-                <div className="flex-1 text-sm px-4 py-2 text-center">
-                  {bank.location || "-"}
-                </div>
-                <div className="flex-1 text-sm px-4 py-2 text-center">
-                  <button
-                    className="text-blue-500 hover:underline"
-                    onClick={() => handleMoreDetailsClick(bank)}
-                  >
-                    More Details
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
       </div>
 
       {selectedBank && (
@@ -157,7 +161,7 @@ const FindBloodFromBloodBanks = ({ token }) => {
                 {selectedBank.availableBloodGroups}
               </p>
               <p>
-                <strong>Location:</strong> {selectedBank.location}
+                <strong>Location:</strong> {selectedBank.district}
               </p>
             </div>
             <button

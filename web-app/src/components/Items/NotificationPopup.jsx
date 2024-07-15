@@ -3,8 +3,7 @@ import axios from "axios";
 import { IoDisc, IoTime } from "react-icons/io5";
 import Tooltip from "@mui/material/Tooltip";
 import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+
 
 const NotificationPopup = ({ userId, token, onClose }) => {
   const [notifications, setNotifications] = useState([]);

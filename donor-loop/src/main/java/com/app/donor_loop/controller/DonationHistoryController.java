@@ -16,13 +16,13 @@ public class DonationHistoryController {
     @Autowired
     private DonationHistoryService donationHistoryService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<DonationHistory> createDonationHistory(@RequestBody DonationHistory donationHistory) {
         DonationHistory createdHistory = donationHistoryService.saveDonationHistory(donationHistory);
         return ResponseEntity.ok(createdHistory);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<DonationHistory> getAllDonationHistory() {
         return donationHistoryService.getAllDonationHistory();
     }
@@ -33,18 +33,18 @@ public class DonationHistoryController {
         return donationHistory.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<DonationHistory> updateDonationHistory(@RequestBody DonationHistory donationHistory) {
         DonationHistory updatedHistory = donationHistoryService.updateDonationHistory(donationHistory);
         return ResponseEntity.ok(updatedHistory);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDonationHistoryById(@PathVariable Long id) {
         donationHistoryService.deleteDonationHistoryById(id);
         return ResponseEntity.ok().build();
     }
-    @GetMapping("/donor/{bloodDonorId}")
+    @GetMapping("/{bloodDonorId}")
     public ResponseEntity<List<DonationHistory>> getDonationHistoryByDonorId(@PathVariable String bloodDonorId) {
         Optional<List<DonationHistory>> donationHistory = donationHistoryService.getDonationHistoryByBloodDonorId(bloodDonorId);
         return donationHistory.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

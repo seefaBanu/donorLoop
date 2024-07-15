@@ -4,17 +4,21 @@ import axios from "axios";
 
 const AddDonationPopup = ({ isOpen, onClose, token, userDetails, selectedDonation, onSubmit }) => {
   const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [units, setUnits] = useState("");
   const [location, setLocation] = useState("");
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (selectedDonation) {
-      setDate(new Date(selectedDonation.donatedDate).toISOString().split("T")[0]);
+      const donatedDate = new Date(selectedDonation.donatedDate);
+      setDate(donatedDate.toISOString().split("T")[0]);
+      setTime(donatedDate.toISOString().split("T")[1].slice(0, 5)); // Extract the time part
       setUnits(selectedDonation.bloodUnits);
       setLocation(selectedDonation.donatedLocation);
     } else {
       setDate("");
+      setTime("");
       setUnits("");
       setLocation("");
     }
@@ -22,9 +26,10 @@ const AddDonationPopup = ({ isOpen, onClose, token, userDetails, selectedDonatio
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const donatedDate = new Date(`${date}T${time}`);
     const donationData = {
       bloodDonorId: userDetails.userid,
-      donatedDate: date,
+      donatedDate: donatedDate.toISOString(),
       bloodUnits: units,
       donatedLocation: location,
       createdTime: new Date(),
@@ -98,21 +103,31 @@ const AddDonationPopup = ({ isOpen, onClose, token, userDetails, selectedDonatio
         }`}
       >
         <div className="bg-black text-white p-8 py-6 text-center rounded-t-3xl">
-        <h2 className="text-lg font-bold mb-2›">
-          {selectedDonation ? "Edit Donation History" : "Add Donation History"}
-        </h2>
-        <h3 className="text-sm font-light text-gray-400 ">
-           Enter the details of your recent blood donation.
-        </h3>
+          <h2 className="text-lg font-bold mb-2">
+            {selectedDonation ? "Edit Donation History" : "Add Donation History"}
+          </h2>
+          <h3 className="text-sm font-light text-gray-400 ">
+            Enter the details of your recent blood donation.
+          </h3>
         </div>
-        <form onSubmit={handleSubmit} className="p-8 " >
+        <form onSubmit={handleSubmit} className="p-8">
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 ">Date</label>
+            <label className="block text-sm font-medium text-gray-700">Date</label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="mt-1 block w-full border-[1px] p-2 text-gray-500  rounded-md shadow-sm focus:border-black focus:ring focus:ring-black focus:ring-opacity-0"
+              className="mt-1 block w-full border-[1px] p-2 text-gray-500 rounded-md shadow-sm focus:border-black focus:ring focus:ring-black focus:ring-opacity-0"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Time</label>
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className="mt-1 block w-full border-[1px] p-2 text-gray-500 rounded-md shadow-sm focus:border-black focus:ring focus:ring-black focus:ring-opacity-0"
               required
             />
           </div>
@@ -122,7 +137,7 @@ const AddDonationPopup = ({ isOpen, onClose, token, userDetails, selectedDonatio
               type="number"
               value={units}
               onChange={(e) => setUnits(e.target.value)}
-              className="mt-1 block w-full border-[1px] p-2 text-gray-500  rounded-md shadow-sm focus:border-black focus:ring focus:ring-black focus:ring-opacity-0"
+              className="mt-1 block w-full border-[1px] p-2 text-gray-500 rounded-md shadow-sm focus:border-black focus:ring focus:ring-black focus:ring-opacity-0"
               required
             />
           </div>
@@ -132,7 +147,7 @@ const AddDonationPopup = ({ isOpen, onClose, token, userDetails, selectedDonatio
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="mt-1 block w-full border-[1px] p-2 text-gray-500  rounded-md shadow-sm focus:border-black focus:ring focus:ring-black focus:ring-opacity-0"
+              className="mt-1 block w-full border-[1px] p-2 text-gray-500 rounded-md shadow-sm focus:border-black focus:ring focus:ring-black focus:ring-opacity-0"
               required
             />
           </div>

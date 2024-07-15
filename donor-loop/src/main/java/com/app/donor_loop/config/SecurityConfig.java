@@ -21,10 +21,9 @@ public class SecurityConfig {
         http.cors()
                 .and()
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(HttpMethod.GET, "/item/**")
+                        .requestMatchers("/login")
                         .permitAll()
                         .requestMatchers("/create-blood-request").hasAuthority("SCOPE_blood_bank")
-                        .requestMatchers("/get-blood-request").hasAuthority("SCOPE_blood_donor")
                         .anyRequest()
                         .authenticated())
                 .oauth2ResourceServer()

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import FindBloodFromBloodBanks from "../components/FindBlood/FindBloodFromBloodBanks";
 import FindBloodFromBloodDonors from "../components/FindBlood/FindBloodFromBloodDonors";
 
-const FindBlood = ({token}) => {
+const FindBlood = ({token, userDetails}) => {
   const [activeTab, setActiveTab] = useState("Blood Banks");
 
   return (
@@ -34,7 +34,7 @@ const FindBlood = ({token}) => {
         <div className="rounded-3xl">
           <div>
             {activeTab === "Blood Banks" ? (
-              <FindBloodFromBloodBanks token = {token} />
+              <FindBloodFromBloodBanks token = {token} userDetails={userDetails}/>
             ) : (
               <FindBloodFromBloodDonors token = {token}/>
             )}

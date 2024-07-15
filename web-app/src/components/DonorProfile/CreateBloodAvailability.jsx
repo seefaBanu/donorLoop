@@ -4,7 +4,12 @@ import SingleSelectDropDown from "../Items/SingleSelectDropDown";
 import Notification from "../Items/Notification";
 import axios from "axios";
 
-const CreateBloodAvailability = ({ bloodBankId, token, userDetails }) => {
+const CreateBloodAvailability = ({
+  bloodBankId,
+  token,
+  userDetails,
+  fetchBloodAvailability,
+}) => {
   const [notification, setNotification] = useState(null);
   const [showCreatePopup, setShowCreatePopup] = useState(false);
   const [newBloodGroups, setNewBloodGroups] = useState([
@@ -23,14 +28,13 @@ const CreateBloodAvailability = ({ bloodBankId, token, userDetails }) => {
       bloodBankProfile: {
         bloodBankUserId: userDetails.userid || "",
         bloodBankName: userDetails.givenName || "",
-        cluster: userDetails.cluster || "", 
+        cluster: userDetails.cluster || "",
         tpNumber: userDetails.phoneNumber || "",
-        location: userDetails.location || "", 
-        district: userDetails.district || "", 
+        location: userDetails.location || "",
+        district: userDetails.district || "",
       },
       bloodAvailabilityList: newBloodGroups,
     };
-
 
     try {
       await axios.post(
@@ -42,6 +46,8 @@ const CreateBloodAvailability = ({ bloodBankId, token, userDetails }) => {
           },
         }
       );
+
+      fetchBloodAvailability();
       showNotification(
         "Success",
         "Blood Availability profile created successfully!",
@@ -64,11 +70,21 @@ const CreateBloodAvailability = ({ bloodBankId, token, userDetails }) => {
       message,
       type,
     });
-    setTimeout(() => setNotification(null), 500); // Hide notification after 3 seconds
+
+    setTimeout(() => {
+      setNotification(null);
+    }, 2000);
   };
 
   return (
     <div className="flex items-center align-middle text-center justify-center mt-20 ">
+      {notification && (
+        <Notification
+          title={notification.title}
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
       <div>
         <p className="text-center text-gray-700">
           No blood availability profile found for this blood bank.

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logo2.png";
 import {
   IoIosNotifications,
   IoMdArrowDropdown,
@@ -131,14 +131,14 @@ export default function Navbar({ token }) {
                 )}
               </div>
               <div className="flex bg-white rounded-full h-12 items-center justify-between px-2 relative">
-                <div className="bg-white rounded-full mx-2 h-8 w-8 flex items-center justify-center shadow-lg">
+                <div className="bg-white rounded-full mx-2 h-8 w-8 flex items-center justify-center shadow-lg hover:cursor-pointer" onClick={()=> navigate("/")}>
                   <img
-                    src={userDetails.picture || Logo} // Default to Logo if picture is not available
+                    src={userDetails.picture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUW0u5Eiiy3oM6wcpeEE6sXCzlh8G-tX1_Iw&s"} // Default to Logo if picture is not available
                     alt="user"
                     className="h-6 w-6 rounded-full"
                   />
                 </div>
-                <div className="w-24">
+                <div className="w-24 ">
                   <p className="text-sm text-black font-bold">
                     {getTruncatedName(userDetails.displayName || "No Name")}{" "}
                     {/* Default to "No Name" if displayName is not available */}
@@ -154,7 +154,7 @@ export default function Navbar({ token }) {
                   onClick={toggleDropdown}
                 />
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-12 bg-white border rounded shadow-lg w-32">
+                  <div className="absolute right-0 mt-20 bg-white border rounded shadow-lg w-32 ">
                     <button
                       className="w-full text-left px-4 py-2 text-sm hover:bg-gray-200"
                       onClick={() => signOut()}
@@ -268,7 +268,7 @@ export default function Navbar({ token }) {
             </div>
 
             <button
-              className="w-full flex text-left p-4 text-base hover:bg-gray-300  mt-4"
+              className="w-full flex text-left p-4 text-base hover:bg-gray-300 "
               onClick={() => {
                 signOut();
                 setSideMenuOpen(false);

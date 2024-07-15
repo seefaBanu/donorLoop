@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface BloodDonorProfileRepo  extends JpaRepository<BloodDonorProfile, Long> {
+public interface BloodDonorProfileRepo extends JpaRepository<BloodDonorProfile, Long> {
     Optional<BloodDonorProfile> findByBloodDonorUserId(String id);
 
     List<BloodDonorProfile> findByDonationStatus(boolean b);

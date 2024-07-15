@@ -5,6 +5,7 @@ import com.app.donor_loop.repository.DonationHistoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,12 @@ public class DonationHistoryService {
     }
 
     public DonationHistory updateDonationHistory(DonationHistory donationHistory) {
-        return donationHistoryRepo.save(donationHistory);
+        DonationHistory donationHistory1 = donationHistoryRepo.findById(donationHistory.getDonationHistoryId()).get();
+        donationHistory1.setDonatedLocation(donationHistory.getDonatedLocation());
+        donationHistory1.setDonatedDate(donationHistory.getDonatedDate());
+        donationHistory1.setCreatedTime(donationHistory.getCreatedTime());
+        donationHistory1.setBloodUnits(donationHistory.getBloodUnits());
+        return donationHistoryRepo.save(donationHistory1);
     }
 
     public Optional<List<DonationHistory>> getDonationHistoryByBloodDonorId(String bloodDonorId) {

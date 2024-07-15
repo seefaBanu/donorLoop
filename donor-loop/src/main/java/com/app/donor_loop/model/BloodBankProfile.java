@@ -23,4 +23,5 @@ public class BloodBankProfile {
     private String tpNumber;
     private String location;
     private String district;
+    private String email;
 }

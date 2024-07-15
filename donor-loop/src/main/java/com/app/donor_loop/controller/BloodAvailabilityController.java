@@ -13,7 +13,7 @@ import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:3000","http://localhost:5173"})
 @RestController
-@RequestMapping("/")
+@RequestMapping("/blood-availability")
 public class BloodAvailabilityController {
     @Autowired
     private BloodAvailabilityService bloodAvailabilityService;
@@ -21,20 +21,20 @@ public class BloodAvailabilityController {
     @Autowired
     private BloodBankProfileService bloodBankProfileService;
 
-    @PostMapping("/create-blood-availability")
+    @PostMapping
     public ResponseEntity addBloodAvailability(@RequestBody ProfileDTO profileDTO) {
         bloodBankProfileService.createBloodBankProfile(profileDTO.getBloodBankProfile());
         List<BloodAvailability> savedBloodAvailability = bloodAvailabilityService.saveBloodAvailability(profileDTO.getBloodAvailabilityList());
         return ResponseEntity.ok( savedBloodAvailability);
     }
 
-    @GetMapping("/blood-availability/{bloodBankId}")
+    @GetMapping("/{bloodBankId}")
     public ResponseEntity<List<BloodAvailability>> getBloodAvailabilityByBloodBankId(@PathVariable String bloodBankId) {
         List<BloodAvailability> bloodAvailabilityList = bloodAvailabilityService.getBloodAvailabilityByBloodBankId(bloodBankId);
         return ResponseEntity.ok(bloodAvailabilityList);
     }
 
-    @PutMapping("/update-blood-availability/{bloodAvailabilityId}")
+    @PutMapping("/{bloodAvailabilityId}")
     public HttpStatus updateBloodAvailability(@PathVariable Long bloodAvailabilityId,@RequestParam String status){
         return bloodAvailabilityService.updateBloodAvailability(bloodAvailabilityId, status);
     }

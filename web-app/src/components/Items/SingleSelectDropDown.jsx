@@ -12,9 +12,9 @@ const SingleSelectDropDown = ({ options, selectedOption, onChange }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative h-full ">
       <div
-        className="flex flex-row items-center justify-between border rounded-lg px-2 py-1"
+        className="flex flex-row items-center justify-between border rounded-lg px-2 py-1 "
         onClick={toggleDropdown}
       >
         <p className="text-gray-500 text-sm font-light">
@@ -23,7 +23,7 @@ const SingleSelectDropDown = ({ options, selectedOption, onChange }) => {
         <IoMdArrowDropdown className="text-gray-500" />
       </div>
       {isOpen && (
-        <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg z-10">
+        <div className="absolute mt-2 w-full bg-white border rounded-lg  shadow-lg z-10 h-40 overflow-auto">
           {options.map((option) => (
             <div key={option} className="flex items-center px-4 py-2">
               <input

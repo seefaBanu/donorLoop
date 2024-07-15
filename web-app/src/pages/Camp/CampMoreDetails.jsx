@@ -6,7 +6,7 @@ import CallIcon from "@mui/icons-material/Call";
 import axios from "axios"; // Import axios for API calls
 import { IoArrowBack } from "react-icons/io5";
 
-const CampMoreDetails = ({ camps, token, groups }) => {
+const CampMoreDetails = ({ camps, token, groups, userDetails }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const camp = camps ? camps.find((c) => c.campId === parseInt(id)) : null;
@@ -17,18 +17,22 @@ const CampMoreDetails = ({ camps, token, groups }) => {
 
   const addToGoogleCalendar = () => {
     if (camp) {
-      const startDate = new Date(camp.date + " " + camp.s_time);
-      const endDate = new Date(camp.date + " " + camp.e_time);
+      const startDate = new Date(`${camp.date}T${camp.stime}`);
+      const endDate = new Date(`${camp.date}T${camp.etime}`);
 
-      const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-        camp.title
-      )}&dates=${startDate.toISOString().replace(/-|:|\.\d\d\d/g, "")}/${endDate
-        .toISOString()
-        .replace(/-|:|\.\d\d\d/g, "")}&details=${encodeURIComponent(
-        camp.description
-      )}&location=${encodeURIComponent(camp.location)}`;
-
-      window.open(googleCalendarUrl, "_blank");
+      if (!isNaN(startDate) && !isNaN(endDate)) {
+        const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+          camp.title
+        )}&dates=${startDate.toISOString().replace(/-|:|\.\d\d\d/g, "")}/${endDate
+          .toISOString()
+          .replace(/-|:|\.\d\d\d/g, "")}&details=${encodeURIComponent(
+          camp.description
+        )}&location=${encodeURIComponent(camp.location)}`;
+        console.log("Google Calendar URL:", googleCalendarUrl);
+        window.open(googleCalendarUrl, "_blank");
+      } else {
+        console.error("Invalid date or time format");
+      }
     }
   };
 
@@ -97,11 +101,14 @@ const CampMoreDetails = ({ camps, token, groups }) => {
                   <CalendarMonthOutlinedIcon />
                 </div>
                 <p className=" my-auto text-xs">
-                  {camp.date} {camp.s_time} to {camp.e_time}
+                  {camp.date} {camp.stime} to {camp.etime}
                 </p>
               </div>
-              <div className="flex mt-4 text-xs text-blue-700">
-                <p onClick={addToGoogleCalendar}>Add to Calendar</p>
+              <div
+                className="flex mt-4 text-xs text-blue-700 hover:cursor-pointer "
+                onClick={ addToGoogleCalendar}
+              >
+                <p>Add to Calendar</p>
               </div>
             </div>
           </div>
@@ -123,7 +130,9 @@ const CampMoreDetails = ({ camps, token, groups }) => {
           <CallIcon className="text-gray-400" /> {camp.phone1}
           <p className="pl-2 pr-2 text-sm text-gray-400">{camp.phone2}</p>
         </div>
-        {groups.includes("blood_bank") && (
+        {groups.includes("blood_bank") &&  (
+          <>
+          {camp.bloodBankId === userDetails.userid && (
           <div className="flex">
             <button
               type="button"
@@ -140,6 +149,8 @@ const CampMoreDetails = ({ camps, token, groups }) => {
               Delete
             </button>
           </div>
+          )}
+          </>
         )}
       </div>
     </div>

@@ -35,9 +35,6 @@ public class BloodRequests {
 
     @Column(name = "blood_needed")
     private String bloodNeeded;
-
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
     private Date reqDate;
 
     @Column(nullable = false)

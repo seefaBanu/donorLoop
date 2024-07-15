@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000","http://localhost:5173"})
 @RestController
-@RequestMapping("/")
+@RequestMapping("/blood-request")
 public class BloodReqController {
 
     private final BloodReqService bloodReqService;
@@ -26,7 +26,7 @@ public class BloodReqController {
     }
 
     // Get all blood requests
-    @GetMapping("get-blood-requests")
+    @GetMapping
     public List<BloodRequests> getAllBloodRequests() {
         return bloodReqService.getAllBloodRequests();
     }
@@ -39,7 +39,7 @@ public class BloodReqController {
     }
 
     // Create a new blood request
-    @PostMapping("create-blood-request")
+    @PostMapping
     public BloodRequests createBloodRequest(@RequestBody BloodRequestsDTO bloodRequest) throws MessagingException, UnsupportedEncodingException {
         return bloodReqService.createBloodRequest(bloodRequest);
     }

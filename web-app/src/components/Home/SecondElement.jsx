@@ -1,7 +1,12 @@
 import React from "react";
 import img1 from "../../assets/img1.png";
+import { useAuthContext } from "@asgardeo/auth-react";
+import { useNavigate } from "react-router-dom";
 
 const SecondElement = () => {
+  const { signIn } = useAuthContext();
+  const navigate = useNavigate();
+
   return (
     < div className=" flex flex-row items-center justify-center p-6 sm:flex-col sm:p-6 ">
       <div className="w-1/2 flex justify-center items-center mb-4 md:mb-0 sm:w-[100%] ">
@@ -21,7 +26,7 @@ const SecondElement = () => {
           lasting impact on lives. Together, let's ensure no one waits for the
           blood they need.
         </p>
-        <button className="bg-black text-white py-2 px-4 rounded-3xl hover:bg-black ">
+        <button className="bg-black text-white py-2 px-4 rounded-3xl hover:bg-black " onClick= {()=> navigate("/register")}>
           Get Started
         </button>
       </div>

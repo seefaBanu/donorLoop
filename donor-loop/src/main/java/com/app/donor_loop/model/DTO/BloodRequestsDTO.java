@@ -23,9 +23,7 @@ public class BloodRequestsDTO {
     private String tpNumber;
 
     private List<String> bloodNeeded;
-
     private Date reqDate;
-
     private String status;
 
     private String location;

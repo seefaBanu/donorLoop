@@ -4,7 +4,8 @@ import Notification from "../Items/Notification";
 import axios from "axios";
 import SingleSelectDropDown from "../Items/SingleSelectDropDown";
 import CreateBloodAvailability from "./CreateBloodAvailability";
-import { Spinner } from "@material-tailwind/react";
+import Spinner from "../Items/Spinner";
+import Snackbar from "@mui/material/Snackbar";
 
 const BloodAvailability = ({ userDetails, token }) => {
   const [bloodGroups, setBloodGroups] = useState([]);
@@ -14,6 +15,12 @@ const BloodAvailability = ({ userDetails, token }) => {
   const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeout, setTimeoutState] = useState(false);
+  const [state, setState] = React.useState({
+    open: false,
+    vertical: "bottom",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, open } = state;
 
   useEffect(() => {
     fetchBloodAvailability();
@@ -56,6 +63,7 @@ const BloodAvailability = ({ userDetails, token }) => {
     try {
       const updatedBloodGroup = await updateBloodAvailabilityStatus(bloodGroup);
       if (updatedBloodGroup) {
+        // setState({ ...state, open: true });
         const updatedBloodGroups = [...bloodGroups];
         updatedBloodGroups[index] = updatedBloodGroup;
         setBloodGroups(updatedBloodGroups);
@@ -109,7 +117,10 @@ const BloodAvailability = ({ userDetails, token }) => {
       message,
       type,
     });
-    setTimeout(() => setNotification(null), 500);
+
+    setTimeout(() => {
+      setNotification(null);
+    }, 2000);
   };
 
   if (loading) {
@@ -123,8 +134,19 @@ const BloodAvailability = ({ userDetails, token }) => {
   }
 
   if (bloodGroups.length === 0) {
-    return <CreateBloodAvailability bloodBankId={bloodBankId} token={token} userDetails = {userDetails} />;
+    return (
+      <CreateBloodAvailability
+        bloodBankId={bloodBankId}
+        token={token}
+        userDetails={userDetails}
+        fetchBloodAvailability={fetchBloodAvailability}
+      />
+    );
   }
+
+  const handleSnackBarClose = () => {
+    setState({ ...state, open: false });
+  };
 
   return (
     <div>

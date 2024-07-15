@@ -4,7 +4,7 @@ const API_BASE_URL = "http://localhost:8080/";
 
 class Services {
   getBloodRequests(token) {
-    return axios.get(API_BASE_URL + "get-blood-requests", {
+    return axios.get(API_BASE_URL + "blood-request", {
       headers: {
         
         Authorization: `Bearer ${token}`,
@@ -13,7 +13,7 @@ class Services {
   }
 
   createBloodRequest(bloodRequest, token) {
-    return axios.post(API_BASE_URL+"create-blood-request", bloodRequest, {
+    return axios.post(API_BASE_URL+"blood-request", bloodRequest, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -21,7 +21,7 @@ class Services {
   }
 
   getBloodRequestById(bloodRequestId, token) {
-    return axios.get(API_BASE_URL + "/" + bloodRequestId, {
+    return axios.get(API_BASE_URL + "blood-request/" + bloodRequestId, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -30,7 +30,7 @@ class Services {
 
   updateBloodRequest(bloodRequest, bloodRequestId, token) {
     return axios.put(
-      API_BASE_URL + "/" + bloodRequestId,
+      API_BASE_URL + "blood-request/" + bloodRequestId,
       bloodRequest,
       {
         headers: {
@@ -41,7 +41,7 @@ class Services {
   }
 
   deleteBloodRequest(bloodRequestId, token) {
-    return axios.delete(API_BASE_URL + "/" + bloodRequestId, {
+    return axios.delete(API_BASE_URL + "delete-blood-request/" + bloodRequestId, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

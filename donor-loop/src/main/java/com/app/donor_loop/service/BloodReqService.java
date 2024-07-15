@@ -35,7 +35,7 @@ public class BloodReqService {
     }
 
     public List<BloodRequests> getAllBloodRequests() {
-        return bloodReqRepo.findAll();
+        return bloodReqRepo.findAllByOrderByReqDateDesc();
     }
 
     public Optional<BloodRequests> getBloodRequestById(Long id) {
@@ -48,7 +48,7 @@ public class BloodReqService {
         bloodRequests.setBloodBankName(bloodRequestDTO.getBloodBankName());
         bloodRequests.setCluster(bloodRequestDTO.getCluster());
         bloodRequests.setTpNumber(bloodRequestDTO.getTpNumber());
-        bloodRequests.setBloodNeeded(String.join(" ", bloodRequestDTO.getBloodNeeded()));
+        bloodRequests.setBloodNeeded(String.join(",", bloodRequestDTO.getBloodNeeded()));
         bloodRequests.setReqDate(bloodRequestDTO.getReqDate());
         bloodRequests.setStatus(bloodRequestDTO.getStatus());
         bloodRequests.setLocation(bloodRequestDTO.getLocation());
@@ -95,7 +95,7 @@ public class BloodReqService {
                     + "<br/>"
                     + "<p style=\"color:#333;\">Dear " + donor.getBloodDonorName() + ",</p>"
                     + "<p style=\"color:#333;\">"
-                    + "There is an urgent blood request in your area for blood group: <strong>" + request.getBloodNeeded() + "</strong>. "
+                    + "There is an urgent blood request in your area for blood group: <strong>" + donor.getBloodGroup() + "</strong>. "
                     + "Please consider donating if you are available.</p>"
                     + "<br/>"
                     + "<p style=\"color:#333;\">To get more details, click here: <a href=\"http://localhost:5173/request\">http://localhost:5173/request</a></p>"

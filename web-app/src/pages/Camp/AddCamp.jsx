@@ -79,7 +79,6 @@ const AddCamp = ({ token, userDetails }) => {
       });
 
       navigate("/camps"); 
-      window.location.reload();
     } catch (error) {
       console.error("Error adding new camp:", error);
       alert("There was an error adding the new camp. Please try again.");

@@ -14,6 +14,7 @@ public class BloodBankProfileService {
     private BloodBankProfileRepo bloodBankProfileRepository;
 
     public ResponseEntity<BloodBankProfile> createBloodBankProfile(BloodBankProfile bloodBankProfile) {
+        bloodBankProfileRepository.findByBloodBankUserId(bloodBankProfile.getBloodBankUserId());
         BloodBankProfile savedProfile = bloodBankProfileRepository.save(bloodBankProfile);
         return ResponseEntity.ok(savedProfile);
     }

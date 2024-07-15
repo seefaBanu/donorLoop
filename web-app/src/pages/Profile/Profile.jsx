@@ -50,7 +50,7 @@ export const Profile = ({ userDetails, userGroup, token }) => {
           </div>
           <hr className="border-gray-300" />
           <div className="p-4 ">
-            {activeTab === "About" && <AboutDonor userDetails={userDetails} />}
+            {activeTab === "About" && <AboutDonor userDetails={userDetails} userGroup={userGroup}/>}
             {activeTab === "Donation History" && <DonationHistory  userDetails={userDetails} token={token} />}
             {activeTab === "Blood Availablity" && <BloodAvailablity userDetails={userDetails} token={token} />}
           </div>
