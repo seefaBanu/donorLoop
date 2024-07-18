@@ -20,17 +20,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/camps")
 public class CampController {
-
     @Autowired
-    private CampService campService;
-    private final ObjectMapper objectMapper;
-
+    private  CampService campService;
+    @Autowired
+    private  ObjectMapper objectMapper;
     private static final Logger logger = LoggerFactory.getLogger(CampController.class);
-
-    public CampController(CampService campService, ObjectMapper objectMapper) {
-        this.campService = campService;
-        this.objectMapper = objectMapper;
-    }
 
     @PostMapping
     public ResponseEntity<Camp> addCamp(@RequestParam String camp,

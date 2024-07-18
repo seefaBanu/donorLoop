@@ -5,8 +5,6 @@ import com.app.donor_loop.repository.CampRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,13 +19,10 @@ import java.util.UUID;
 
 @Service
 public class CampService {
-    private final CampRepo campRepo;
+    @Autowired
+    private  CampRepo campRepo;
     @Value("${upload.dir}")
     private String uploadDir;
-
-    public CampService(CampRepo campRepo) {
-        this.campRepo = campRepo;
-    }
 
     public Camp addCamp(Camp camp, MultipartFile file) throws IOException {
         Camp camp1 = new Camp();
