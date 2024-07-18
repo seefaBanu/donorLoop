@@ -1,7 +1,7 @@
 # Docker multi-stage build
 
 # 1. Building the App with Maven
-FROM maven:3.8.7-apache-maven
+FROM maven:3.9.8
 
 ADD . /donor-loop
 WORKDIR /donor-loop
