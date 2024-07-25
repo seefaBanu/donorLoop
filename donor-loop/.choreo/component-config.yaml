@@ -15,6 +15,6 @@ spec:
       networkVisibility: Public
       # +optional Context (base path) of the API that gets exposed via the endpoint.
       # This is mandatory if the endpoint type is set to REST or GraphQL.
-      context: /donor-loop
+      context: /
 
 
