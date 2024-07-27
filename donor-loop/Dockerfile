@@ -19,9 +19,9 @@ USER 10014
 COPY --from=0 "/donor-loop/target/donor-loop-0.0.1-SNAPSHOT.jar" donor-loop.jar
 
 # Default environment variables
-ENV DB_URL=${DB_URL}
-ENV DB_USERNAME=${DB_USERNAME}
-ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_URL=""
+ENV DB_USERNAME=""
+ENV DB_PASSWORD=""
 ENV SPRING_JWT_AUDIENCE=""
 ENV UPLOAD_DIR=""
 ENV SPRING_MAIL_USERNAME=""
