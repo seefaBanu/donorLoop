@@ -6,7 +6,15 @@ spec:
       port: 8080
       type: REST
       networkVisibility: Public
-      context: /
-
-
+      context: /donor-loop
+      endpoints:
+        - path: /blood-availability
+          method: POST
+          operationId: addBloodAvailability
+        - path: /blood-availability/{bloodBankId}
+          method: GET
+          operationId: getBloodAvailabilityByBloodBankId
+        - path: /blood-availability/{bloodAvailabilityId}
+          method: PUT
+          operationId: updateBloodAvailability
 
