@@ -1,10 +1,8 @@
 package com.app.donor_loop.service;
 
-import com.app.donor_loop.model.DTO.WebSocketMessage;
 import com.app.donor_loop.model.Notification;
 import com.app.donor_loop.repository.NotificationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,14 +11,7 @@ import java.util.List;
 public class NotificationService {
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-    @Autowired
     private NotificationRepo notificationRepository;
-
-    public void notifyUser(String userId, String message) {
-        WebSocketMessage webSocketMessage = new WebSocketMessage(message);
-        messagingTemplate.convertAndSendToUser(userId, "/queue/notifications", webSocketMessage);
-    }
 
     public List<Notification> getNotificationsByUserId(String userId) {
         return notificationRepository.findByUserIdOrderByTimestampDesc(userId);

@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: donor-loop
+    environment:
+      DB_URL: jdbc:mysql://localhost:3306/donor-loop
+      DB_USERNAME: root
+      DB_PASSWORD: 19990928S
+      SPRING_JWT_AUDIENCE: ${SPRING_JWT_AUDIENCE}
+      UPLOAD_DIR: /uploads
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - uploads:/uploads
+
+volumes:
+  db_data:
+  uploads:
