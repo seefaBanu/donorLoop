@@ -5,6 +5,7 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import CallIcon from "@mui/icons-material/Call";
 import axios from "axios"; // Import axios for API calls
 import { IoArrowBack } from "react-icons/io5";
+import Services from "../../services/Services";
 
 const CampMoreDetails = ({ camps, token, groups, userDetails }) => {
   const navigate = useNavigate();
@@ -38,14 +39,7 @@ const CampMoreDetails = ({ camps, token, groups, userDetails }) => {
 
   const handleDelete = (campId) => {
     if (campId && token) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      axios
-        .delete(`http://localhost:8080/camps/${campId}`, config)
+      Services.deleteCamp(campId, token)
         .then((response) => {
           console.log("Camp deleted successfully:", response);
           // Optionally navigate to a different page or update state after deletion

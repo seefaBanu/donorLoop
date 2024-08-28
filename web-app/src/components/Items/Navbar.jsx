@@ -11,6 +11,7 @@ import { useAuthContext } from "@asgardeo/auth-react";
 import { useNavigate } from "react-router-dom";
 import NotificationPopup from "./NotificationPopup";
 import axios from "axios";
+import Services from "../../services/Services";
 
 export default function Navbar({ token }) {
   const [group, setGroup] = useState([]);
@@ -54,10 +55,7 @@ export default function Navbar({ token }) {
 
   useEffect(() => {
     if (userDetails.userid) {
-      axios
-        .get(`http://localhost:8080/notification/${userDetails.userid}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      Services.getNotificationsByBloodDonorId(token, userDetails.userid)
         .then((response) => {
           if (Array.isArray(response.data)) {
             const unread = response.data.filter(

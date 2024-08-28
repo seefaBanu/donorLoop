@@ -18,6 +18,7 @@ import AllCamps from "./pages/Camp/AllCamps";
 import { useLocation } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Services from "./services/Services";
 
 function AnimatedRouter()  {
 
@@ -32,12 +33,7 @@ function AnimatedRouter()  {
 
   const fetchCamps = (token) => {
     setLoading(true);
-    axios
-      .get("http://localhost:8080/camps", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    Services.getCamps(token)
       .then((response) => {
         setCamps(response.data);
         setLoading(false);

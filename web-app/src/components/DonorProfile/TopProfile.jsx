@@ -4,6 +4,7 @@ import Bg from "../../assets/donor.jpg";
 import axios from "axios";
 import Tooltip from "@mui/material/Tooltip";
 import Snackbar from "@mui/material/Snackbar";
+import Services from "../../services/Services";
 
 const TopProfile = ({ userDetails, token }) => {
   const [group, setGroup] = useState("");
@@ -26,14 +27,7 @@ const TopProfile = ({ userDetails, token }) => {
   const fetchProfile = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:8080/blood-donor-profile/${userDetails.userid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await Services.getBloodDonorProfile(userDetails.userid, token);
       if (response.status === 200) {
         setProfile(response.data);
         setStatus(response.data.donationStatus);
@@ -72,16 +66,7 @@ const TopProfile = ({ userDetails, token }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/blood-donor-profile",
-        profileData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await Services.createBloodDonorProfile(profileData, token);
       setProfile(response.data);
       setState({ ...state, open: true });
       fetchProfile();
@@ -95,16 +80,7 @@ const TopProfile = ({ userDetails, token }) => {
   const handleUpdateStatus = async (status) => {
     setLoading(true);
     try {
-      const response = await axios.put(
-        `http://localhost:8080/blood-donor-profile/status/${userDetails.userid}`,
-        status,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await Services.updateBloodDonorProfile(userDetails.userid, status, token);
       if (response.status === 200) {
         setState({ ...state, open: true });
         setProfile({ ...profile, readyToDonate: status });

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
+import Services from "../../services/Services";
 
 const AddCamp = ({ token, userDetails }) => {
   const [campData, setCampData] = useState({
@@ -71,13 +72,7 @@ const AddCamp = ({ token, userDetails }) => {
 
       console.log("Form data:", formData);
 
-      await axios.post("http://localhost:8080/camps", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Ensure correct content type for FormData
-          Authorization: `Bearer ${token}`, // Include Authorization header with token
-        },
-      });
-
+      await Services.createCamp(formData, token);
       navigate("/camps"); 
     } catch (error) {
       console.error("Error adding new camp:", error);

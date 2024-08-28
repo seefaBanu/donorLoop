@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Notification from "../Items/Notification";
 import axios from "axios";
+import Services from "../../services/Services";
 
 const AddDonationPopup = ({ isOpen, onClose, token, userDetails, selectedDonation, onSubmit }) => {
   const [date, setDate] = useState("");
@@ -40,28 +41,10 @@ const AddDonationPopup = ({ isOpen, onClose, token, userDetails, selectedDonatio
       if (selectedDonation) {
         // Update donation
         donationData.donationHistoryId = selectedDonation.donationHistoryId;
-        response = await axios.put(
-          `http://localhost:8080/donation-history/update`,
-          donationData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        response = await Services.updateDonationHistory(donationData, token);
       } else {
         // Create new donation
-        response = await axios.post(
-          `http://localhost:8080/donation-history/create`,
-          donationData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        response = await Services.createDonationHistory(donationData, token);
       }
       onSubmit(response.data);
       showNotification("Success", "Donation History saved successfully!", "success");

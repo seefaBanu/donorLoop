@@ -14,6 +14,7 @@ const AllCamps = ({ camps, group, fetchCamp, loading }) => {
 
   useEffect(() => {
     fetchCamp();
+    
   }, []);
 
   const handleSearchChange = (e) => {

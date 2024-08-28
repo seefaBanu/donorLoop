@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
+import Services from "../../services/Services";
 
 const UpdateCamp = ({ camps, token }) => {
   const { id } = useParams();
@@ -83,14 +84,11 @@ const UpdateCamp = ({ camps, token }) => {
   
         console.log("Form data:", formData);
   
-        await axios.put(`http://localhost:8080/camps/${id}`, formData, {
-            headers: {
-            "Content-Type": "multipart/form-data", // Ensure correct content type for FormData
-            Authorization: `Bearer ${token}`, // Include Authorization header with token
-          },
-        });
-  
-        window.location.reload();
+        const response = await Services.updateCamp(formData, id, token);
+        if (response.status === 200) {
+          alert("Camp updated successfully!");
+        }
+        // window.location.reload();
         navigate(`/camp-more-details/${id}`);
     } catch (error) {
       console.error("Error updating camp:", error);

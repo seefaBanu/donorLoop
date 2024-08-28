@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaBell, FaCheckCircle, FaTimesCircle, FaExclamationCircle, FaInfoCircle } from 'react-icons/fa';
+import Services from '../services/Services';
 
 const Notification = ({ token, userId }) => {
   const [notifications, setNotifications] = useState([]);
@@ -8,11 +9,7 @@ const Notification = ({ token, userId }) => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/notifications/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await Services.getNotificationsByBloodDonorId(token, userId);
         setNotifications(response.data);
       } catch (error) {
         console.error('Error fetching notifications:', error);

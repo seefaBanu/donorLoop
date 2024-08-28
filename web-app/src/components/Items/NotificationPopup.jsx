@@ -3,6 +3,7 @@ import axios from "axios";
 import { IoDisc, IoTime } from "react-icons/io5";
 import Tooltip from "@mui/material/Tooltip";
 import Snackbar from "@mui/material/Snackbar";
+import Services from "../../services/Services";
 
 
 const NotificationPopup = ({ userId, token, onClose }) => {
@@ -16,10 +17,7 @@ const NotificationPopup = ({ userId, token, onClose }) => {
   const { vertical, horizontal, open } = state;
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/notification/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    Services.getNotificationsByBloodDonorId(token, userId)
       .then((response) => {
         if (Array.isArray(response.data)) {
           setNotifications(response.data);
@@ -31,14 +29,7 @@ const NotificationPopup = ({ userId, token, onClose }) => {
   }, [userId, token]);
 
   const markAsRead = (notificationId) => {
-    axios
-      .post(
-        `http://localhost:8080/notification/mark-as-read/${notificationId}`,
-        null,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+    Services.markAsRead(notificationId, token)
       .then(() => {
         setNotifications((prevNotifications) =>
           prevNotifications.map((notification) =>
@@ -54,14 +45,7 @@ const NotificationPopup = ({ userId, token, onClose }) => {
   };
 
   const markAllAsRead = () => {
-    axios
-      .post(
-        `http://localhost:8080/notification/mark-all-as-read/${userId}`,
-        null,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+    Services.markAllAsRead(userId, token)
       .then(() => {
         setNotifications((prevNotifications) =>
           prevNotifications.map((notification) => ({

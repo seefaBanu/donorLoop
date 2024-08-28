@@ -4,6 +4,7 @@ import AddDonationPopup from "./AddDonationPopup";
 import ConfirmationPopup from "../Items/ConfirmationPopup";
 import axios from "axios";
 import { MdDelete, MdEdit } from "react-icons/md";
+import Services from "../../services/Services";
 
 const DonationHistory = ({ userDetails, token }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -13,20 +14,14 @@ const DonationHistory = ({ userDetails, token }) => {
   const [donationToDelete, setDonationToDelete] = useState(null);
 
   useEffect(() => {
-
     fetchDonations();
-    
   }, [token, userDetails.userid]);
 
   const fetchDonations = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/donation-history/donor/${userDetails.userid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const response = await Services.getDonationHistoryByBloodDonorId(
+        userDetails.userid,
+        token
       );
       if (response.ok) {
         const data = await response.json();

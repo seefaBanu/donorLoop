@@ -6,6 +6,7 @@ import SingleSelectDropDown from "../Items/SingleSelectDropDown";
 import CreateBloodAvailability from "./CreateBloodAvailability";
 import Spinner from "../Items/Spinner";
 import Snackbar from "@mui/material/Snackbar";
+import Services from "../../services/Services";
 
 const BloodAvailability = ({ userDetails, token }) => {
   const [bloodGroups, setBloodGroups] = useState([]);
@@ -28,14 +29,7 @@ const BloodAvailability = ({ userDetails, token }) => {
 
   const fetchBloodAvailability = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/blood-availability/${bloodBankId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await Services.getBloodAvailability(bloodBankId, token);
       setBloodGroups(response.data || []);
       setLoading(false);
     } catch (error) {
@@ -90,15 +84,7 @@ const BloodAvailability = ({ userDetails, token }) => {
     const updatedStatus = availabilityEdits[bloodGroup.bloodAvailabilityId];
     console.log("Updated status:", updatedStatus);
     try {
-      const response = await axios.put(
-        `http://localhost:8080/update-blood-availability/${bloodGroup.bloodAvailabilityId}?status=${updatedStatus}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await Services.updateBloodAvailabilityStatus(bloodGroup.bloodAvailabilityId, updatedStatus, token );
       return response.data;
     } catch (error) {
       console.error("Error updating blood availability status:", error);

@@ -3,6 +3,7 @@ import { useState } from "react";
 import SingleSelectDropDown from "../Items/SingleSelectDropDown";
 import Notification from "../Items/Notification";
 import axios from "axios";
+import Services from "../../services/Services";
 
 const CreateBloodAvailability = ({
   bloodBankId,
@@ -37,16 +38,7 @@ const CreateBloodAvailability = ({
     };
 
     try {
-      await axios.post(
-        "http://localhost:8080/create-blood-availability",
-        profileDTO,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await Services.createBloodAvailability(profileDTO,token) ;
       fetchBloodAvailability();
       showNotification(
         "Success",

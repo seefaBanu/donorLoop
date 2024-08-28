@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { IoSearchCircle } from "react-icons/io5";
 import axios from "axios";
 import Spinner from "../Items/Spinner";
+import Services from "../../services/Services";
 
 const FindBloodFromBloodDonors = ({ token }) => {
   const [bloodDonors, setBloodDonors] = useState([]);
@@ -14,14 +15,7 @@ const FindBloodFromBloodDonors = ({ token }) => {
     const fetchBloodDonors = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          "http://localhost:8080/find-blood/blood-donors",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await Services.findBloodByBloodDonors(token);
         setBloodDonors(response.data);
         setLoading(false);
       } catch (error) {
