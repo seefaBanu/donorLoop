@@ -11,8 +11,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider
       config={{
-        signInRedirectURL: "https://0746d51b-516c-4f00-92c8-ffd6e1986e0b.e1-us-east-azure.choreoapps.dev",
-        signOutRedirectURL: "https://0746d51b-516c-4f00-92c8-ffd6e1986e0b.e1-us-east-azure.choreoapps.dev",
+        signInRedirectURL: "http://0746d51b-516c-4f00-92c8-ffd6e1986e0b.e1-us-east-azure.choreoapps.dev",
+        signOutRedirectURL: "http://0746d51b-516c-4f00-92c8-ffd6e1986e0b.e1-us-east-azure.choreoapps.dev",
         clientID: "3ctl4QB9EGLe35WOxfDhW3ytfAQa",
         baseUrl: "https://api.asgardeo.io/t/eternity",
         scope: [
