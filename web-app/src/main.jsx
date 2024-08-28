@@ -7,32 +7,31 @@ import "animate.css/animate.min.css";
 import "react-notifications-component/dist/theme.css";
 import { ReactNotifications } from "react-notifications-component";
 
-// Load environment variables
-// const signInRedirectURL = import.meta.env.VITE_SIGN_IN_REDIRECT_URL;
-// const signOutRedirectURL = import.meta.env.VITE_SIGN_OUT_REDIRECT_URL;
-// const clientID = import.meta.env.VITE_CLIENT_ID;
-// const baseUrl = import.meta.env.VITE_BASE_URL;
-// const scope = import.meta.env.VITE_SCOPE;
-
-const signInRedirectURL = window.config.auth.VITE_SIGN_IN_REDIRECT_URL;
-const signOutRedirectURL = window.config.auth.VITE_SIGN_OUT_REDIRECT_URL;
-const clientID = window.config.auth.VITE_CLIENT_ID;
-const baseUrl = window.config.auth.VITE_BASE_URL;
-const scope = window.config.auth.VITE_SCOPE;
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider
       config={{
-        signInRedirectURL,
-        signOutRedirectURL,
-        clientID,
-        baseUrl,
-        scope,
+        signInRedirectURL: "https://0746d51b-516c-4f00-92c8-ffd6e1986e0b.e1-us-east-azure.choreoapps.dev",
+        signOutRedirectURL: "https://0746d51b-516c-4f00-92c8-ffd6e1986e0b.e1-us-east-azure.choreoapps.dev",
+        clientID: "3ctl4QB9EGLe35WOxfDhW3ytfAQa",
+        baseUrl: "https://api.asgardeo.io/t/eternity",
+        scope: [
+          "openid",
+          "address",
+          "app_roles",
+          "email",
+          "groups",
+          "phone",
+          "profile",
+          "admin", 
+          "blood_donor",
+          "blood_bank",
+          "Role"
+        ],
       }}
     >
       <ReactNotifications />
-      <App />
+        <App />
     </AuthProvider>
   </React.StrictMode>
 );
