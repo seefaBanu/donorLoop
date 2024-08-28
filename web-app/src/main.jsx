@@ -8,11 +8,17 @@ import "react-notifications-component/dist/theme.css";
 import { ReactNotifications } from "react-notifications-component";
 
 // Load environment variables
-const signInRedirectURL = import.meta.env.VITE_SIGN_IN_REDIRECT_URL;
-const signOutRedirectURL = import.meta.env.VITE_SIGN_OUT_REDIRECT_URL;
-const clientID = import.meta.env.VITE_CLIENT_ID;
-const baseUrl = import.meta.env.VITE_BASE_URL;
-const scope = import.meta.env.VITE_SCOPE;
+// const signInRedirectURL = import.meta.env.VITE_SIGN_IN_REDIRECT_URL;
+// const signOutRedirectURL = import.meta.env.VITE_SIGN_OUT_REDIRECT_URL;
+// const clientID = import.meta.env.VITE_CLIENT_ID;
+// const baseUrl = import.meta.env.VITE_BASE_URL;
+// const scope = import.meta.env.VITE_SCOPE;
+
+const signInRedirectURL = window.config.auth.VITE_SIGN_IN_REDIRECT_URL;
+const signOutRedirectURL = window.config.auth.VITE_SIGN_OUT_REDIRECT_URL;
+const clientID = window.config.auth.VITE_CLIENT_ID;
+const baseUrl = window.config.auth.VITE_BASE_URL;
+const scope = window.config.auth.VITE_SCOPE;
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
