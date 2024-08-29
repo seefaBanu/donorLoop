@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_BASE_URL =
-  "http://ec2-3-26-69-145.ap-southeast-2.compute.amazonaws.com:8080/";
+  "https://ec2-3-26-69-145.ap-southeast-2.compute.amazonaws.com:8443/";
 
 class Services {
   getBloodRequests(token) {
@@ -245,7 +245,7 @@ class Services {
       },
     });
   }
-  
+
 }
 
 export default new Services();
