@@ -149,7 +149,7 @@ export const Camp = ({ camps, group, fetchCamp, loading, userDetails }) => {
                 <div className="flex w-full">
                   <div className="w-1/4 align-middle items-center mx-auto my-auto">
                     <img
-                      src={`/${camp.imageUrl}`}
+                      src={`${camp.imageUrl}`}
                       alt={camp.title}
                       className="rounded-lg h-40 w-full object-cover mx-2"
                     />

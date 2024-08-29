@@ -60,7 +60,7 @@ const CampMoreDetails = ({ camps, token, groups, userDetails }) => {
       <div
         className="relative h-60"
         style={{
-          backgroundImage: `url(/${camp.imageUrl})`,
+          backgroundImage: `url(${camp.imageUrl})`,
         }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>

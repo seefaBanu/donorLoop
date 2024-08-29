@@ -78,7 +78,7 @@ const AllCamps = ({ camps, group, fetchCamp, loading }) => {
                   <div className="flex flex-col ">
                     <div className="flex align-middle items-center mx-auto my-auto">
                       <img
-                        src={`/${camp.imageUrl}`}
+                        src={`${camp.imageUrl}`}
                         alt={camp.title}
                         className="rounded-lg h-40 w-full object-cover"
                       />
