@@ -60,7 +60,7 @@ const AboutDonor = ({ userDetails, userGroup }) => {
         <div className="flex items-center">
           <FaPhone className="w-4 h-4 mr-4 text-gray-400" />
           <div className="text-gray-700 font-light">
-            {userDetails.phone || "(123) 456-7890"}
+            {userDetails.phoneNumber || "(123) 456-7890"}
           </div>
         </div>
       </div>
