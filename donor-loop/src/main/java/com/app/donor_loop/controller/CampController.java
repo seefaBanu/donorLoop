@@ -16,15 +16,18 @@ import java.io.IOException;
 import java.util.List;
 
 
-@CrossOrigin(origins = {"http://localhost:3000","http://localhost:5173"})
+@CrossOrigin(origins = {"http://localhost:3000","http://localhost:5173","*"})
 @RestController
 @RequestMapping("/camps")
 public class CampController {
-    @Autowired
-    private  CampService campService;
+    private final CampService campService;
     @Autowired
     private  ObjectMapper objectMapper;
     private static final Logger logger = LoggerFactory.getLogger(CampController.class);
+
+    public CampController(CampService campService) {
+        this.campService = campService;
+    }
 
     @PostMapping
     public ResponseEntity<Camp> addCamp(@RequestParam String camp,
@@ -38,6 +41,8 @@ public class CampController {
             return ResponseEntity.ok(createdCamp);
         } catch (IOException e) {
             return ResponseEntity.status(500).body(null);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

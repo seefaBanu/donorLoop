@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_BASE_URL =
-  "https://ec2-52-65-210-159.ap-southeast-2.compute.amazonaws.com:443/";
+  "http://ec2-52-65-210-159.ap-southeast-2.compute.amazonaws.com:80/";
 
 class Services {
   getBloodRequests(token) {
@@ -222,7 +222,7 @@ class Services {
   }
 
   getCamps(token) {
-    return axios.get(API_BASE_URL + "camps", {
+    return fetch(API_BASE_URL + "camps", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -245,7 +245,6 @@ class Services {
       },
     });
   }
-
 }
 
 export default new Services();

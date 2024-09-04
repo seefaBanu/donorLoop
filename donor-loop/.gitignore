@@ -35,3 +35,9 @@ build/
 .vscode/
 
 .env
+
+/src/main/resources/*.pem
+/src/main/resources/*.json
+/src/main/resources/*.p12
+
+

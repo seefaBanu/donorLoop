@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
-
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Date;

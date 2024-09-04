@@ -15,8 +15,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        //Permit all the GET request to "/marketplace/item" API (JWT authentication is not enforced for this API)
-        //Protect all the requests to "/marketplace/shoppingcart" API (JWT authentication is enforced for this API)
 
         http.cors()
                 .and()

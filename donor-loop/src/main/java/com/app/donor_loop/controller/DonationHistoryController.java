@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
+@CrossOrigin(origins = {"http://localhost:3000","http://localhost:5173","*"})
 @RestController
 @RequestMapping("/donation-history")
 public class DonationHistoryController {
@@ -44,7 +44,7 @@ public class DonationHistoryController {
         donationHistoryService.deleteDonationHistoryById(id);
         return ResponseEntity.ok().build();
     }
-    @GetMapping("/{bloodDonorId}")
+    @GetMapping("/donor/{bloodDonorId}")
     public ResponseEntity<List<DonationHistory>> getDonationHistoryByDonorId(@PathVariable String bloodDonorId) {
         Optional<List<DonationHistory>> donationHistory = donationHistoryService.getDonationHistoryByBloodDonorId(bloodDonorId);
         return donationHistory.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

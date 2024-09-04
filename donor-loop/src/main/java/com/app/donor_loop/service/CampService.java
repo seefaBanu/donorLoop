@@ -2,41 +2,45 @@ package com.app.donor_loop.service;
 
 import com.app.donor_loop.model.Camp;
 import com.app.donor_loop.repository.CampRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.storage.*;
+import com.google.firebase.cloud.StorageClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class CampService {
-    @Autowired
-    private  CampRepo campRepo;
-    @Value("${upload.dir}")
-    private String uploadDir;
+    private final CampRepo campRepo;
 
-    public Camp addCamp(Camp camp, MultipartFile file) throws IOException {
+    @Value("${image.base.url}")
+    private String imageBaseUrl;
+
+    public CampService(CampRepo campRepo) {
+        this.campRepo = campRepo;
+    }
+
+    public Camp addCamp(Camp camp, MultipartFile file) throws IOException, InterruptedException {
         Camp camp1 = new Camp();
         if (!file.isEmpty()) {
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 
-            Path uploadPath = Paths.get(uploadDir);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-            Files.copy(file.getInputStream(), uploadPath.resolve(fileName));
+            upload(file,fileName);
+            String url = imageBaseUrl + fileName;
 
-            Path filePath = Paths.get(uploadDir + fileName);
-            camp.setImageUrl(fileName); // Assuming Camp has an image field
+            camp.setImageUrl(getImageUrl(url)); // Assuming Camp has an image field
         }
         camp1.setTitle(camp.getTitle());
         return campRepo.save(camp);
@@ -68,14 +72,9 @@ public class CampService {
             // Update image if file is provided
             if (file != null && !file.isEmpty()) {
                 String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-                Path uploadPath = Paths.get(uploadDir);
-
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-
-                Files.copy(file.getInputStream(), uploadPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
-                existingCamp.setImageUrl(fileName);
+                upload(file,fileName);
+                String url = imageBaseUrl + fileName;
+                existingCamp.setImageUrl(url);
             }
 
             // Save the updated camp
@@ -90,4 +89,25 @@ public class CampService {
         campRepo.deleteById(id);
         return "Camp deleted Successfully";
     }
+
+//    upload to fire base related
+
+    public void upload(MultipartFile imageFile, String imageName) throws IOException {
+        InputStream inputStream = imageFile.getInputStream();
+        Bucket bucket = StorageClient.getInstance().bucket();
+        bucket.create(imageName, inputStream, "image/png");
+    }
+
+    public String getImageUrl(String baseUrl) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(baseUrl))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        String jsonResponse = response.body();
+        JsonNode node = new ObjectMapper().readTree(jsonResponse);
+        String imageToken = node.get("downloadTokens").asText();
+        return baseUrl + "?alt=media&token=" + imageToken;
+    }
+
 }
