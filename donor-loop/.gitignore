@@ -40,4 +40,8 @@ build/
 /src/main/resources/*.json
 /src/main/resources/*.p12
 
+/src/main/resources/*.properties
+
+
+
 
