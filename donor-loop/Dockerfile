@@ -30,8 +30,8 @@ WORKDIR /donor-loop
 COPY target/donor-loop-0.0.1-SNAPSHOT.jar donor-loop.jar
 
 # Expose the port that the Spring Boot application will run on
-EXPOSE 8443
-
+EXPOSE 8080
+USER 10014
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV SPRING_DATASOURCE_URL=jdbc:mysql://donorloopdb.cv2mei6egmjy.ap-southeast-2.rds.amazonaws.com:3306/donorloop
 ENV SPRING_DATASOURCE_USERNAME=admin
@@ -39,7 +39,7 @@ ENV SPRING_DATASOURCE_PASSWORD=19990928S
 ENV SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
 ENV SPRING_JWT_AUDIENCE=3ctl4QB9EGLe35WOxfDhW3ytfAQa
 ENV UPLOAD_DIR=/Users/seefabanu/Documents/Projects/donar-loop/web-app/public
-ENV SPRING_MAIL_PASSWORD="qgtb aots kfja aqwm"
+ENV SPRING_MAIL_PASSWORD="qltb aojs klja riwm"
 ENV SPRING_MAIL_USERNAME=seefabanugafoor@gmail.com
 
 
