@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const API_BASE_URL =
-  // "http://ec2-52-65-210-159.ap-southeast-2.compute.amazonaws.com:80/";
-  "https://f4d34640-cdab-448e-b7aa-246833188b1c-dev.e1-us-east-azure.choreoapis.dev/donorloop/api/v1.0/";
+  "https://ec2-52-65-210-159.ap-southeast-2.compute.amazonaws.com:443/";
+  // "https://f4d34640-cdab-448e-b7aa-246833188b1c-dev.e1-us-east-azure.choreoapis.dev/donorloop/api/v1.0/";
 
 class Services {
   getBloodRequests(token) {
