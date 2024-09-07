@@ -85,26 +85,30 @@ export default function Navbar({ token }) {
         <>
           <div className="flex flex-row w-full justify-between ">
             <div className="flex grow justify-center items-center sm:hidden sm:w-0 ">
-            <p
-                className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105"
-                onClick={() => navigate("/dashboard")}
-              >
-                Dashboard
-              </p>
+              {group.includes("blood_bank") && (
+                <>
+                  <p
+                    className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105"
+                    onClick={() => navigate("/dashboard")}
+                  >
+                    Dashboard
+                  </p>
+                  <p
+                    className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105"
+                    onClick={() => navigate("/find-blood")}
+                  >
+                    Find Blood
+                  </p>
+                </>
+              )}
+
               <p
                 className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105"
                 onClick={() => navigate("/camps")}
               >
                 Camps
               </p>
-              {group.includes("blood_bank") && (
-                <p
-                  className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105"
-                  onClick={() => navigate("/find-blood")}
-                >
-                  Find Blood
-                </p>
-              )}
+
               <p
                 className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105"
                 onClick={() => navigate("/request")}
@@ -135,9 +139,15 @@ export default function Navbar({ token }) {
                 )}
               </div>
               <div className="flex bg-white rounded-full h-12 items-center justify-between px-2 relative">
-                <div className="bg-white rounded-full mx-2 h-8 w-8 flex items-center justify-center shadow-lg hover:cursor-pointer" onClick={()=> navigate("/")}>
+                <div
+                  className="bg-white rounded-full mx-2 h-8 w-8 flex items-center justify-center shadow-lg hover:cursor-pointer"
+                  onClick={() => navigate("/")}
+                >
                   <img
-                    src={userDetails.picture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUW0u5Eiiy3oM6wcpeEE6sXCzlh8G-tX1_Iw&s"} // Default to Logo if picture is not available
+                    src={
+                      userDetails.picture ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUW0u5Eiiy3oM6wcpeEE6sXCzlh8G-tX1_Iw&s"
+                    } // Default to Logo if picture is not available
                     alt="user"
                     className="h-6 w-6 rounded-full"
                   />
