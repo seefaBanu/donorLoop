@@ -85,6 +85,12 @@ export default function Navbar({ token }) {
         <>
           <div className="flex flex-row w-full justify-between ">
             <div className="flex grow justify-center items-center sm:hidden sm:w-0 ">
+            <p
+                className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105"
+                onClick={() => navigate("/dashboard")}
+              >
+                Dashboard
+              </p>
               <p
                 className="text-xs text-white px-2 hover:cursor-pointer hover:scale-105"
                 onClick={() => navigate("/camps")}

@@ -11,10 +11,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider
       config={{
-        signInRedirectURL: "https://donor-loop.choreoapps.dev",
-        signOutRedirectURL: "https://donor-loop.choreoapps.dev",
-        // signInRedirectURL: "http://localhost:5173",
-        // signOutRedirectURL: "http://localhost:5173",
+        // signInRedirectURL: "https://donor-loop.choreoapps.dev",
+        // signOutRedirectURL: "https://donor-loop.choreoapps.dev",
+        signInRedirectURL: "http://localhost:5173",
+        signOutRedirectURL: "http://localhost:5173",
         // signInRedirectURL: "http://donor-loop.netlify.app/",
         // signOutRedirectURL: "http://donor-loop.netlify.app/",
         clientID: "3ctl4QB9EGLe35WOxfDhW3ytfAQa",
